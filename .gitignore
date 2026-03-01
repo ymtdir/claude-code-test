@@ -1,6 +1,10 @@
 # Claude
 *.local.json
 
+# Environment variables
+.env
+.env.local
+
 # Logs
 logs
 *.log
