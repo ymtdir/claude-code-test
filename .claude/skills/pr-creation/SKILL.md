@@ -98,11 +98,8 @@ case "$PRIMARY_TYPE" in
   "refactor")
     LABEL="refactor"
     ;;
-  "test")
-    LABEL="test"
-    ;;
-  "chore")
-    LABEL="chore"
+  "style")
+    LABEL="ui/ux"
     ;;
   *)
     LABEL=""
@@ -116,36 +113,42 @@ if [ -n "$LABEL" ]; then
 
   # ラベルが存在するか確認
   if grep -q "^${LABEL}$" /tmp/labels.txt; then
-    # ラベルをPRに追加
-    gh pr edit $PR_NUMBER --add-label "$LABEL"
+    # ラベルをPRに追加（GitHub APIを使用）
+    gh api repos/$OWNER/$REPO/issues/$PR_NUMBER/labels -X POST --field "labels[]=$LABEL"
     echo "✅ ラベル '$LABEL' を追加しました"
   else
-    # ラベルが存在しない場合、作成を試みる（権限がある場合）
-    gh label create "$LABEL" --description "自動生成されたラベル" --color "0366d6" 2>/dev/null
-    if [ $? -eq 0 ]; then
-      gh pr edit $PR_NUMBER --add-label "$LABEL"
-      echo "✅ ラベル '$LABEL' を作成して追加しました"
-    else
-      echo "⚠️ ラベル '$LABEL' が存在しません（権限不足のため作成できません）"
-    fi
+    # ラベルが存在しない場合、警告を表示
+    echo "⚠️ ラベル '$LABEL' が存在しません"
+    echo "以下のラベルを事前に作成してください："
+    echo "  - enhancement (新機能)"
+    echo "  - bug (バグ修正)"
+    echo "  - documentation (ドキュメント)"
+    echo "  - refactor (リファクタリング)"
+    echo "  - ui/ux (UI/UXの改善)"
   fi
 else
   echo "ℹ️ プレフィックスからラベルを判定できませんでした"
 fi
 ```
 
+**ラベルマッピング**:
+- `feat:` → `enhancement`（新機能）
+- `fix:` → `bug`（バグ修正）
+- `docs:` → `documentation`（ドキュメント）
+- `refactor:` → `refactor`（リファクタリング）
+- `style:` → `ui/ux`（UI/UXの改善）
+
 **プレフィックス優先順位**（複数が同数の場合）:
 1. fix（バグ修正が最優先）
 2. feat（新機能）
-3. docs（ドキュメント）
-4. refactor（リファクタリング）
-5. test（テスト）
-6. chore（その他）
+3. style（UI/UX改善）
+4. docs（ドキュメント）
+5. refactor（リファクタリング）
 
-**エラーハンドリング**:
-- ラベルが存在しない場合、作成を試みる
-- 権限不足の場合は警告メッセージを表示
-- ラベル作成が成功した場合は自動的に適用
+**注意事項**:
+- test:とchore:プレフィックスはラベル付与対象外
+- ラベルは事前に作成しておく必要がある（自動作成はしない）
+- GitHub APIを使用してラベルを付与（`gh pr edit`は権限エラーが発生するため使用しない）
 
 ### ステップ7: 自動レビュー実行
 
@@ -263,13 +266,13 @@ PR作成後の追加処理:
 
 1. **自動ラベル付与**（ステップ6で実装）
    - コミットプレフィックスから自動判定
-   - `feat:` → enhancement
-   - `fix:` → bug
-   - `docs:` → documentation
-   - `refactor:` → refactor
-   - `test:` → test
-   - `chore:` → chore
+   - `feat:` → enhancement（新機能）
+   - `fix:` → bug（バグ修正）
+   - `docs:` → documentation（ドキュメント）
+   - `refactor:` → refactor（リファクタリング）
+   - `style:` → ui/ux（UI/UXの改善）
    - ラベルが存在しない場合は警告表示
+   - test:とchore:はラベル付与対象外
 
 2. **レビュアーの推奨**
    - 変更ファイルのCODEOWNERSから自動判定
