@@ -70,7 +70,49 @@ mcp__github__create_pull_request({
 })
 ```
 
-### ステップ6: 自動レビュー実行
+### ステップ6: 自動ラベル付与
+
+PR作成成功後、コミットプレフィックスに基づいてラベルを付与：
+
+```javascript
+// コミットメッセージからプレフィックスを解析
+const commits = await getCommitMessages();
+const prefixes = analyzePrefixes(commits);
+const primaryType = getMostFrequentPrefix(prefixes);
+
+// ラベルマッピング
+const labelMapping = {
+  'feat': 'enhancement',
+  'fix': 'bug',
+  'docs': 'documentation',
+  'refactor': 'refactor',
+  'test': 'test',
+  'chore': 'chore'
+};
+
+// ラベルを付与
+const label = labelMapping[primaryType];
+if (label) {
+  // ラベルの存在確認
+  const labels = await gh('label list');
+  if (labels.includes(label)) {
+    await gh(`pr edit ${prNumber} --add-label ${label}`);
+    console.log(`✅ ラベル '${label}' を追加しました`);
+  } else {
+    console.log(`⚠️ ラベル '${label}' が存在しません（手動で作成してください）`);
+  }
+}
+```
+
+**プレフィックス優先順位**（複数が同数の場合）:
+1. fix（バグ修正が最優先）
+2. feat（新機能）
+3. docs（ドキュメント）
+4. refactor（リファクタリング）
+5. test（テスト）
+6. chore（その他）
+
+### ステップ7: 自動レビュー実行
 
 PR作成後、即座にレビューを実行：
 
@@ -184,9 +226,15 @@ PR作成前の確認:
 
 PR作成後の追加処理:
 
-1. **ラベルの付与**
-   - 種類に応じたラベル（bug/enhancement/refactor）
-   - 優先度ラベル（必要に応じて）
+1. **自動ラベル付与**（ステップ6で実装）
+   - コミットプレフィックスから自動判定
+   - `feat:` → enhancement
+   - `fix:` → bug
+   - `docs:` → documentation
+   - `refactor:` → refactor
+   - `test:` → test
+   - `chore:` → chore
+   - ラベルが存在しない場合は警告表示
 
 2. **レビュアーの推奨**
    - 変更ファイルのCODEOWNERSから自動判定
