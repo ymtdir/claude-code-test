@@ -70,6 +70,19 @@ mcp__github__create_pull_request({
 })
 ```
 
+PR作成後、PR番号を取得：
+```bash
+# PR番号を取得（作成したPRの番号を取得）
+PR_NUMBER=$(gh pr view --json number -q ".number")
+# またはPR URLから番号を抽出
+# PR_URL=$(gh pr create ... | tail -1)
+# PR_NUMBER=$(basename "$PR_URL")
+
+# リポジトリ情報を取得
+OWNER=$(gh repo view --json owner -q ".owner.login")
+REPO=$(gh repo view --json name -q ".name")
+```
+
 ### ステップ6: 自動ラベル付与
 
 PR作成成功後、関連Issueとコミットプレフィックスに基づいてラベルを付与：
@@ -93,21 +106,42 @@ fi
 if [ -z "$LABEL" ]; then
   git log origin/main..HEAD --oneline > /tmp/commits.txt
 
-  # プレフィックスを解析（重要度優先）
-  # feat/fixがあれば優先、なければ他のプレフィックスを考慮
-  if grep -q "^[a-z0-9]* feat:" /tmp/commits.txt; then
-    PRIMARY_TYPE="feat"
-  elif grep -q "^[a-z0-9]* fix:" /tmp/commits.txt; then
-    PRIMARY_TYPE="fix"
-  elif grep -q "^[a-z0-9]* style:" /tmp/commits.txt; then
-    PRIMARY_TYPE="style"
-  elif grep -q "^[a-z0-9]* docs:" /tmp/commits.txt; then
-    PRIMARY_TYPE="docs"
-  elif grep -q "^[a-z0-9]* refactor:" /tmp/commits.txt; then
-    PRIMARY_TYPE="refactor"
+  # コロンを含むコミットのみ処理し、既知のプレフィックスのみカウント
+  grep ':' /tmp/commits.txt | cut -d: -f1 | awk '{print $2}' | \
+    grep -E '^(feat|fix|docs|refactor|style|test|chore)$' | \
+    sort | uniq -c | sort -rn > /tmp/prefix_counts.txt
+
+  # カウント結果が空の場合の処理
+  if [ ! -s /tmp/prefix_counts.txt ]; then
+    echo "ℹ️ 従来型コミットプレフィックスが見つかりませんでした"
+    PRIMARY_TYPE=""
   else
-    # feat/fix/style/docs/refactorがない場合は最多のプレフィックスを使用
-    PRIMARY_TYPE=$(cat /tmp/commits.txt | cut -d: -f1 | awk '{print $2}' | sort | uniq -c | sort -rn | head -1 | awk '{print $2}')
+    # 優先順位を定義（fix > feat > style > docs > refactor）
+    PRIORITY_ORDER=("fix" "feat" "style" "docs" "refactor")
+
+    # 最大カウントを取得
+    MAX_COUNT=$(head -1 /tmp/prefix_counts.txt | awk '{print $1}')
+
+    # 最大カウントのプレフィックスを取得
+    CANDIDATES=$(awk -v max="$MAX_COUNT" '$1 == max {print $2}' /tmp/prefix_counts.txt)
+
+    # 優先順位に従って選択
+    PRIMARY_TYPE=""
+    for prefix in "${PRIORITY_ORDER[@]}"; do
+      if echo "$CANDIDATES" | grep -q "^${prefix}$"; then
+        PRIMARY_TYPE="$prefix"
+        echo "ℹ️ プレフィックス '$PRIMARY_TYPE' を選択（優先順位による）"
+        break
+      fi
+    done
+
+    # 優先順位にない場合は最初の候補を使用
+    if [ -z "$PRIMARY_TYPE" ]; then
+      PRIMARY_TYPE=$(echo "$CANDIDATES" | head -1)
+      if [ -n "$PRIMARY_TYPE" ]; then
+        echo "ℹ️ プレフィックス '$PRIMARY_TYPE' を選択（最多）"
+      fi
+    fi
   fi
 
   # ラベルマッピングに基づいてラベルを決定
@@ -138,16 +172,24 @@ if [ -z "$LABEL" ]; then
   esac
 fi
 
-# 3. ラベルが存在するか確認
+# 3. ラベルが存在するか確認して付与
 if [ -n "$LABEL" ]; then
   # ラベル一覧を取得
   gh label list --json name -q ".[].name" > /tmp/labels.txt
+  if [ $? -ne 0 ]; then
+    echo "⚠️ ラベル一覧の取得に失敗しました"
+    exit 0
+  fi
 
   # ラベルが存在するか確認
   if grep -q "^${LABEL}$" /tmp/labels.txt; then
     # ラベルをPRに追加（GitHub APIを使用）
     gh api repos/$OWNER/$REPO/issues/$PR_NUMBER/labels -X POST --field "labels[]=$LABEL"
-    echo "✅ ラベル '$LABEL' を追加しました"
+    if [ $? -eq 0 ]; then
+      echo "✅ ラベル '$LABEL' を追加しました"
+    else
+      echo "⚠️ ラベル '$LABEL' の追加に失敗しました"
+    fi
   else
     # ラベルが存在しない場合、警告を表示
     echo "⚠️ ラベル '$LABEL' が存在しません"
