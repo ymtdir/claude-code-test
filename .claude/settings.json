@@ -6,7 +6,16 @@
       "Skill(architecture-design)",
       "Skill(repository-structure)",
       "Skill(development-guidelines)",
-      "Skill(glossary-creation)"
+      "Skill(glossary-creation)",
+      "Skill(pr-creation)",
+      "Skill(issue-tracking)",
+      "Skill(issue-resolution)",
+      "Bash",
+      "Edit",
+      "Write",
+      "Read",
+      "Glob",
+      "Grep"
     ],
     "deny": [],
     "ask": []
