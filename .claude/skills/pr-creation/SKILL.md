@@ -74,34 +74,64 @@ mcp__github__create_pull_request({
 
 PR作成成功後、コミットプレフィックスに基づいてラベルを付与：
 
-```javascript
-// コミットメッセージからプレフィックスを解析
-const commits = await getCommitMessages();
-const prefixes = analyzePrefixes(commits);
-const primaryType = getMostFrequentPrefix(prefixes);
+```bash
+# 1. コミットメッセージを取得
+git log origin/main..HEAD --oneline > /tmp/commits.txt
 
-// ラベルマッピング
-const labelMapping = {
-  'feat': 'enhancement',
-  'fix': 'bug',
-  'docs': 'documentation',
-  'refactor': 'refactor',
-  'test': 'test',
-  'chore': 'chore'
-};
+# 2. プレフィックスを解析してカウント
+cat /tmp/commits.txt | cut -d: -f1 | awk '{print $2}' | sort | uniq -c | sort -rn
 
-// ラベルを付与
-const label = labelMapping[primaryType];
-if (label) {
-  // ラベルの存在確認
-  const labels = await gh('label list');
-  if (labels.includes(label)) {
-    await gh(`pr edit ${prNumber} --add-label ${label}`);
-    console.log(`✅ ラベル '${label}' を追加しました`);
-  } else {
-    console.log(`⚠️ ラベル '${label}' が存在しません（手動で作成してください）`);
-  }
-}
+# 3. 最も多いプレフィックスを特定
+PRIMARY_TYPE=$(cat /tmp/commits.txt | cut -d: -f1 | awk '{print $2}' | sort | uniq -c | sort -rn | head -1 | awk '{print $2}')
+
+# 4. ラベルマッピングに基づいてラベルを決定
+case "$PRIMARY_TYPE" in
+  "feat")
+    LABEL="enhancement"
+    ;;
+  "fix")
+    LABEL="bug"
+    ;;
+  "docs")
+    LABEL="documentation"
+    ;;
+  "refactor")
+    LABEL="refactor"
+    ;;
+  "test")
+    LABEL="test"
+    ;;
+  "chore")
+    LABEL="chore"
+    ;;
+  *)
+    LABEL=""
+    ;;
+esac
+
+# 5. ラベルが存在するか確認
+if [ -n "$LABEL" ]; then
+  # ラベル一覧を取得
+  gh label list --json name -q ".[].name" > /tmp/labels.txt
+
+  # ラベルが存在するか確認
+  if grep -q "^${LABEL}$" /tmp/labels.txt; then
+    # ラベルをPRに追加
+    gh pr edit $PR_NUMBER --add-label "$LABEL"
+    echo "✅ ラベル '$LABEL' を追加しました"
+  else
+    # ラベルが存在しない場合、作成を試みる（権限がある場合）
+    gh label create "$LABEL" --description "自動生成されたラベル" --color "0366d6" 2>/dev/null
+    if [ $? -eq 0 ]; then
+      gh pr edit $PR_NUMBER --add-label "$LABEL"
+      echo "✅ ラベル '$LABEL' を作成して追加しました"
+    else
+      echo "⚠️ ラベル '$LABEL' が存在しません（権限不足のため作成できません）"
+    fi
+  fi
+else
+  echo "ℹ️ プレフィックスからラベルを判定できませんでした"
+fi
 ```
 
 **プレフィックス優先順位**（複数が同数の場合）:
@@ -111,6 +141,11 @@ if (label) {
 4. refactor（リファクタリング）
 5. test（テスト）
 6. chore（その他）
+
+**エラーハンドリング**:
+- ラベルが存在しない場合、作成を試みる
+- 権限不足の場合は警告メッセージを表示
+- ラベル作成が成功した場合は自動的に適用
 
 ### ステップ7: 自動レビュー実行
 
