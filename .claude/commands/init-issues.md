@@ -19,6 +19,8 @@ claude
   - docs/product-requirements.md
   - docs/functional-design.md
   - docs/architecture.md
+- ラベル定義を確認すること：
+  - **必須**: `.claude/skills/shared/label-definitions.md`を参照
 
 ## 手順
 
@@ -47,16 +49,18 @@ claude
 - Web: レスポンシブ対応、SEO
 - CLI: コマンド実装、設定管理
 
-### ステップ3: issue-trackingスキルでのIssue作成
+### ステップ3: GitHub APIでIssue作成
 
-各Issueに対して：
-1. 適切なテンプレート選択（enhancement/refactor）
-2. 標準ラベル付与：
-   - 種類: `enhancement`（新機能・改善・セットアップ）
-   - 種類: `refactor`（リファクタリング）
-   - 種類: `documentation`（ドキュメント）
-3. 依存関係の明記
-4. GitHub APIでIssue作成
+各Issueの作成手順：
+
+1. **ラベル選択**: `.claude/skills/shared/label-definitions.md`で定義された標準ラベルから適切なものを選択
+   - ⚠️ 定義ファイルに記載されていないラベルは使用禁止
+
+2. **テンプレート適用**: enhancementテンプレートを基本使用
+
+3. **依存関係記述**: 前のステップへの依存を明記（例: #15が前提）
+
+4. **API実行**: `gh issue create`でIssue作成
 
 ### ステップ4: 結果レポート
 
