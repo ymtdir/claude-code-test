@@ -19,16 +19,17 @@ allowed-tools: Read, Write, Bash, Glob, mcp__github__*
 
 ## Issue作成プロセス
 
+**注**: ラベル判定ルールは[shared/label-definitions.md](../shared/label-definitions.md)を参照
+
 ### ステップ1: 課題の分析と分類
 
-課題の内容から種類を自動判定：
+課題の内容からラベルを自動判定します。
+判定ルールの詳細は [shared/label-definitions.md](../shared/label-definitions.md) を参照してください。
 
-- **bug**: エラー、不具合、期待と異なる動作
-  - キーワード: error, bug, broken, fail, crash, 動作しない
-- **enhancement**: 新機能、改善提案
-  - キーワード: 追加, 改善, 機能, enhancement, feature
-- **refactor**: リファクタリング、技術的負債
-  - キーワード: リファクタ, 整理, 技術的負債, TODO, FIXME
+判定方法：
+1. タイトルと本文からキーワードを検索
+2. マッチしたキーワードに基づいてラベルを選択
+3. 複数マッチした場合は優先順位（bug > enhancement > ui/ux > documentation > refactor）で決定
 
 ### ステップ2: コンテキスト情報の収集
 
@@ -47,6 +48,7 @@ Glob('.steering/*/requirements.md')
 
 - **bug** → `templates/bug.md`
 - **enhancement** → `templates/enhancement.md`
+- **documentation** → シンプルな説明形式
 - **refactor** → `templates/refactor.md`
 
 ### ステップ4: GitHub Issue作成
@@ -58,7 +60,7 @@ mcp__github__issue_write({
   "repo": "[リポジトリ名]",
   "title": "[課題タイトル]",
   "body": "[テンプレートで生成した本文]",
-  "labels": ["deferred", "[種類ラベル]"]
+  "labels": ["[種類ラベル]"]  // GitHubの標準ラベルのみ使用
 })
 ```
 
@@ -76,15 +78,10 @@ mcp__github__issue_write({
 
 ## ラベリング
 
-自動付与されるラベル：
+使用するラベルは [shared/label-definitions.md](../shared/label-definitions.md) で定義されています。
 
-- **deferred**: 後日対応（デフォルト）
-- **bug**: バグ・不具合
-- **enhancement**: 機能追加・改善
-- **refactor**: リファクタリング・技術的負債
-- **priority-high**: 優先度高（オプション）
-- **priority-medium**: 優先度中（オプション）
-- **priority-low**: 優先度低（オプション）
+- **自動付与**: キーワードマッチに基づいて種類ラベル（bug, enhancement等）を付与
+- **手動付与**: 必要に応じて補助ラベル（good first issue, help wanted等）を追加
 
 ## エラーハンドリング
 
@@ -104,13 +101,18 @@ GitHub MCPサーバーの設定を確認するよう案内
 ### bug.md
 - 現象と再現手順
 - 期待される動作と実際の動作
+- 環境情報
 
 ### enhancement.md
-- 提案内容と背景
+- 概要と背景
 - 期待される効果
+- 実装方針（初期Issue作成時）
 
 ### refactor.md
 - 現在の問題点
 - 改善案
 - 対象箇所
-- 作業規模
+- 影響範囲
+
+### documentation（テンプレートなし）
+- シンプルな説明形式で作成
