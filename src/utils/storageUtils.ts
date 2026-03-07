@@ -82,7 +82,7 @@ const storage = new BrowserStorage('local');
 /**
  * ストレージからアイテムを取得
  */
-export async function getItem<T = any>(key: string): Promise<T | null> {
+export async function getItem<T = unknown>(key: string): Promise<T | null> {
   try {
     const value = await storage.getItem(key);
     if (value === null) {
@@ -105,7 +105,7 @@ export async function getItem<T = any>(key: string): Promise<T | null> {
 /**
  * ストレージにアイテムを保存
  */
-export async function setItem<T = any>(
+export async function setItem<T = unknown>(
   key: string,
   value: T
 ): Promise<boolean> {
@@ -149,7 +149,7 @@ export async function clear(): Promise<boolean> {
 /**
  * 複数のアイテムを一度に取得
  */
-export async function multiGet<T = any>(
+export async function multiGet<T = unknown>(
   keys: string[]
 ): Promise<Map<string, T | null>> {
   const result = new Map<string, T | null>();
@@ -165,7 +165,9 @@ export async function multiGet<T = any>(
 /**
  * 複数のアイテムを一度に保存
  */
-export async function multiSet(items: Record<string, any>): Promise<boolean> {
+export async function multiSet(
+  items: Record<string, unknown>
+): Promise<boolean> {
   try {
     for (const [key, value] of Object.entries(items)) {
       await setItem(key, value);
@@ -273,28 +275,28 @@ export async function getRefreshToken(): Promise<string | null> {
 /**
  * ユーザーデータを保存
  */
-export async function saveUserData(userData: any): Promise<boolean> {
+export async function saveUserData(userData: unknown): Promise<boolean> {
   return setItem(STORAGE_KEYS.USER_DATA, userData);
 }
 
 /**
  * ユーザーデータを取得
  */
-export async function getUserData<T = any>(): Promise<T | null> {
+export async function getUserData<T = unknown>(): Promise<T | null> {
   return getItem<T>(STORAGE_KEYS.USER_DATA);
 }
 
 /**
  * アプリ設定を保存
  */
-export async function saveSettings(settings: any): Promise<boolean> {
+export async function saveSettings(settings: unknown): Promise<boolean> {
   return setItem(STORAGE_KEYS.SETTINGS, settings);
 }
 
 /**
  * アプリ設定を取得
  */
-export async function getSettings<T = any>(): Promise<T | null> {
+export async function getSettings<T = unknown>(): Promise<T | null> {
   return getItem<T>(STORAGE_KEYS.SETTINGS);
 }
 
@@ -329,13 +331,13 @@ export async function getTheme(): Promise<string | null> {
 /**
  * キャッシュデータを保存（有効期限付き）
  */
-export interface CacheData<T = any> {
+export interface CacheData<T = unknown> {
   data: T;
   timestamp: number;
   expiresIn?: number; // ミリ秒
 }
 
-export async function setCacheItem<T = any>(
+export async function setCacheItem<T = unknown>(
   key: string,
   data: T,
   expiresIn?: number
@@ -352,7 +354,9 @@ export async function setCacheItem<T = any>(
 /**
  * キャッシュデータを取得（有効期限チェック付き）
  */
-export async function getCacheItem<T = any>(key: string): Promise<T | null> {
+export async function getCacheItem<T = unknown>(
+  key: string
+): Promise<T | null> {
   const cacheData = await getItem<CacheData<T>>(key);
 
   if (!cacheData || !cacheData.timestamp) {
@@ -414,9 +418,9 @@ export async function clearUserSession(): Promise<boolean> {
 /**
  * ストレージのエクスポート（バックアップ用）
  */
-export async function exportStorage(): Promise<Record<string, any>> {
+export async function exportStorage(): Promise<Record<string, unknown>> {
   const keys = await getAllKeys();
-  const data: Record<string, any> = {};
+  const data: Record<string, unknown> = {};
 
   for (const key of keys) {
     const value = await getItem(key);
@@ -432,7 +436,7 @@ export async function exportStorage(): Promise<Record<string, any>> {
  * ストレージのインポート（リストア用）
  */
 export async function importStorage(
-  data: Record<string, any>
+  data: Record<string, unknown>
 ): Promise<boolean> {
   try {
     for (const [key, value] of Object.entries(data)) {

@@ -248,7 +248,7 @@ export function isValidHexColor(color: string): boolean {
 /**
  * 必須フィールドの検証
  */
-export function isRequired(value: any): boolean {
+export function isRequired(value: unknown): boolean {
   if (value === null || value === undefined) {
     return false;
   }
@@ -267,7 +267,7 @@ export function isRequired(value: any): boolean {
 /**
  * 最小長の検証
  */
-export function minLength(value: string | any[], min: number): boolean {
+export function minLength(value: string | unknown[], min: number): boolean {
   if (!value) {
     return false;
   }
@@ -286,7 +286,7 @@ export function minLength(value: string | any[], min: number): boolean {
 /**
  * 最大長の検証
  */
-export function maxLength(value: string | any[], max: number): boolean {
+export function maxLength(value: string | unknown[], max: number): boolean {
   if (!value) {
     return true; // 空の値は最大長チェックをパス
   }
@@ -389,7 +389,7 @@ export function isValidFileType(
 export class Validator {
   private errors: ValidationError[] = [];
 
-  constructor(private data: any) {}
+  constructor(private data: Record<string, unknown>) {}
 
   required(field: string, message?: string): this {
     if (!isRequired(this.data[field])) {
@@ -448,7 +448,7 @@ export class Validator {
 
   custom(
     field: string,
-    validator: (value: any) => boolean,
+    validator: (value: unknown) => boolean,
     message?: string
   ): this {
     if (!validator(this.data[field])) {
