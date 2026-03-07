@@ -16,7 +16,6 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
     "jsx": "react-native",
     "lib": ["ES2022"],
     "types": ["react-native"],
