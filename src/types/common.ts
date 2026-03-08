@@ -28,7 +28,7 @@ export interface SortConfig {
 export interface AppError {
   code: string;
   message: string;
-  details?: any;
+  details?: unknown;
   stack?: string;
   timestamp: Date;
 }
@@ -37,7 +37,7 @@ export interface AppError {
 export interface ValidationError {
   field: string;
   message: string;
-  value?: any;
+  value?: unknown;
 }
 
 // 検証結果
@@ -55,7 +55,7 @@ export enum AsyncStatus {
 }
 
 // 非同期状態
-export interface AsyncState<T = any> {
+export interface AsyncState<T = unknown> {
   status: AsyncStatus;
   data?: T;
   error?: AppError;
@@ -115,7 +115,7 @@ export interface DeviceInfo {
 }
 
 // 設定項目
-export interface SettingItem<T = any> {
+export interface SettingItem<T = unknown> {
   key: string;
   value: T;
   label: string;
@@ -168,7 +168,7 @@ export interface AppSettings {
 
 // メタデータ
 export interface Metadata {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 // タイムスタンプ
@@ -179,7 +179,7 @@ export interface Timestamps {
 }
 
 // 選択可能アイテム
-export interface SelectableItem<T = any> {
+export interface SelectableItem<T = unknown> {
   value: T;
   label: string;
   disabled?: boolean;
@@ -188,7 +188,7 @@ export interface SelectableItem<T = any> {
 }
 
 // ツリー構造のノード
-export interface TreeNode<T = any> {
+export interface TreeNode<T = unknown> {
   id: string;
   parentId?: string;
   data: T;
@@ -198,7 +198,7 @@ export interface TreeNode<T = any> {
 }
 
 // キーバリューペア
-export interface KeyValue<T = any> {
+export interface KeyValue<T = unknown> {
   key: string;
   value: T;
 }
@@ -224,7 +224,7 @@ export interface Progress {
 }
 
 // アクション
-export interface Action<T = any> {
+export interface Action<T = unknown> {
   type: string;
   payload?: T;
   meta?: Metadata;

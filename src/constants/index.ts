@@ -82,7 +82,7 @@ export const BREAKPOINTS = {
 // 正規表現パターン
 export const REGEX_PATTERNS = {
   EMAIL: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-  PHONE: /^[\d\s\-\+\(\)]+$/,
+  PHONE: /^[\d\s\-+()]+$/,
   URL: /^https?:\/\/.+/i,
   TIME_24H: /^([01]?\d|2[0-3]):[0-5]\d$/,
   DATE_ISO: /^\d{4}-\d{2}-\d{2}$/,
