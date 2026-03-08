@@ -47,12 +47,14 @@ export interface ValidationResult {
 }
 
 // 非同期操作の状態
-export enum AsyncStatus {
-  IDLE = 'idle',
-  LOADING = 'loading',
-  SUCCESS = 'success',
-  ERROR = 'error',
-}
+export const AsyncStatus = {
+  IDLE: 'idle',
+  LOADING: 'loading',
+  SUCCESS: 'success',
+  ERROR: 'error',
+} as const;
+
+export type AsyncStatus = (typeof AsyncStatus)[keyof typeof AsyncStatus];
 
 // 非同期状態
 export interface AsyncState<T = unknown> {
@@ -232,9 +234,12 @@ export interface Action<T = unknown> {
 }
 
 // レスポンスステータス
-export enum ResponseStatus {
-  SUCCESS = 'success',
-  ERROR = 'error',
-  WARNING = 'warning',
-  INFO = 'info',
-}
+export const ResponseStatus = {
+  SUCCESS: 'success',
+  ERROR: 'error',
+  WARNING: 'warning',
+  INFO: 'info',
+} as const;
+
+export type ResponseStatus =
+  (typeof ResponseStatus)[keyof typeof ResponseStatus];

@@ -3,7 +3,7 @@
  */
 
 import { REGEX_PATTERNS, LIMITS, VALIDATION_CONFIG } from '../constants';
-import { ValidationError, ValidationResult } from '../types/common';
+import type { ValidationError, ValidationResult } from '../types/common';
 
 /**
  * メールアドレスの検証
@@ -387,9 +387,12 @@ export function isValidFileType(
  * 汎用バリデーター
  */
 export class Validator {
-  private errors: ValidationError[] = [];
+  errors: ValidationError[] = [];
+  data: Record<string, unknown>;
 
-  constructor(private data: Record<string, unknown>) {}
+  constructor(data: Record<string, unknown>) {
+    this.data = data;
+  }
 
   required(field: string, message?: string): this {
     if (!isRequired(this.data[field])) {
@@ -403,7 +406,8 @@ export class Validator {
   }
 
   email(field: string, message?: string): this {
-    if (this.data[field] && !isValidEmail(this.data[field])) {
+    const value = this.data[field];
+    if (value && typeof value === 'string' && !isValidEmail(value)) {
       this.errors.push({
         field,
         message: message || '有効なメールアドレスを入力してください',
@@ -414,7 +418,8 @@ export class Validator {
   }
 
   min(field: string, min: number, message?: string): this {
-    if (this.data[field] && !minLength(this.data[field], min)) {
+    const value = this.data[field];
+    if (value && !minLength(value as string | unknown[], min)) {
       this.errors.push({
         field,
         message: message || `${field}は${min}文字以上である必要があります`,
@@ -425,7 +430,8 @@ export class Validator {
   }
 
   max(field: string, max: number, message?: string): this {
-    if (this.data[field] && !maxLength(this.data[field], max)) {
+    const value = this.data[field];
+    if (value && !maxLength(value as string | unknown[], max)) {
       this.errors.push({
         field,
         message: message || `${field}は${max}文字以下である必要があります`,
@@ -436,7 +442,8 @@ export class Validator {
   }
 
   pattern(field: string, pattern: RegExp, message?: string): this {
-    if (this.data[field] && !pattern.test(this.data[field])) {
+    const value = this.data[field];
+    if (value && typeof value === 'string' && !pattern.test(value)) {
       this.errors.push({
         field,
         message: message || `${field}の形式が正しくありません`,

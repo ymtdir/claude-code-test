@@ -2,28 +2,32 @@
  * カレンダー関連の型定義
  */
 
-import { Task } from './task';
-import { User } from './user';
+import type { Task } from './task';
+import type { User } from './user';
 
 // カレンダービューの種類
-export enum CalendarView {
-  DAY = 'day',
-  WEEK = 'week',
-  MONTH = 'month',
-  YEAR = 'year',
-  AGENDA = 'agenda',
-}
+export const CalendarView = {
+  DAY: 'day',
+  WEEK: 'week',
+  MONTH: 'month',
+  YEAR: 'year',
+  AGENDA: 'agenda',
+} as const;
+
+export type CalendarView = (typeof CalendarView)[keyof typeof CalendarView];
 
 // 曜日
-export enum DayOfWeek {
-  SUNDAY = 0,
-  MONDAY = 1,
-  TUESDAY = 2,
-  WEDNESDAY = 3,
-  THURSDAY = 4,
-  FRIDAY = 5,
-  SATURDAY = 6,
-}
+export const DayOfWeek = {
+  SUNDAY: 0,
+  MONDAY: 1,
+  TUESDAY: 2,
+  WEDNESDAY: 3,
+  THURSDAY: 4,
+  FRIDAY: 5,
+  SATURDAY: 6,
+} as const;
+
+export type DayOfWeek = (typeof DayOfWeek)[keyof typeof DayOfWeek];
 
 // カレンダー設定
 export interface CalendarSettings {
@@ -54,12 +58,15 @@ export interface CalendarTheme {
 }
 
 // カレンダー共有設定
-export enum SharePermission {
-  VIEW_ONLY = 'view_only',
-  CAN_EDIT = 'can_edit',
-  CAN_DELETE = 'can_delete',
-  OWNER = 'owner',
-}
+export const SharePermission = {
+  VIEW_ONLY: 'view_only',
+  CAN_EDIT: 'can_edit',
+  CAN_DELETE: 'can_delete',
+  OWNER: 'owner',
+} as const;
+
+export type SharePermission =
+  (typeof SharePermission)[keyof typeof SharePermission];
 
 // 共有ユーザー
 export interface SharedUser {
@@ -135,11 +142,13 @@ export interface EventReminder {
 }
 
 // イベントステータス
-export enum EventStatus {
-  CONFIRMED = 'confirmed',
-  TENTATIVE = 'tentative',
-  CANCELLED = 'cancelled',
-}
+export const EventStatus = {
+  CONFIRMED: 'confirmed',
+  TENTATIVE: 'tentative',
+  CANCELLED: 'cancelled',
+} as const;
+
+export type EventStatus = (typeof EventStatus)[keyof typeof EventStatus];
 
 // イベント繰り返し設定
 export interface EventRecurrence {

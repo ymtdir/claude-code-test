@@ -3,31 +3,37 @@
  */
 
 // タスクステータス
-export enum TaskStatus {
-  PENDING = 'pending',
-  IN_PROGRESS = 'in_progress',
-  COMPLETED = 'completed',
-  ARCHIVED = 'archived',
-  CANCELLED = 'cancelled',
-}
+export const TaskStatus = {
+  PENDING: 'pending',
+  IN_PROGRESS: 'in_progress',
+  COMPLETED: 'completed',
+  ARCHIVED: 'archived',
+  CANCELLED: 'cancelled',
+} as const;
+
+export type TaskStatus = (typeof TaskStatus)[keyof typeof TaskStatus];
 
 // タスク優先度
-export enum TaskPriority {
-  LOW = 'low',
-  MEDIUM = 'medium',
-  HIGH = 'high',
-  URGENT = 'urgent',
-}
+export const TaskPriority = {
+  LOW: 'low',
+  MEDIUM: 'medium',
+  HIGH: 'high',
+  URGENT: 'urgent',
+} as const;
+
+export type TaskPriority = (typeof TaskPriority)[keyof typeof TaskPriority];
 
 // 繰り返しタイプ
-export enum RepeatType {
-  NONE = 'none',
-  DAILY = 'daily',
-  WEEKLY = 'weekly',
-  MONTHLY = 'monthly',
-  YEARLY = 'yearly',
-  CUSTOM = 'custom',
-}
+export const RepeatType = {
+  NONE: 'none',
+  DAILY: 'daily',
+  WEEKLY: 'weekly',
+  MONTHLY: 'monthly',
+  YEARLY: 'yearly',
+  CUSTOM: 'custom',
+} as const;
+
+export type RepeatType = (typeof RepeatType)[keyof typeof RepeatType];
 
 // カテゴリー
 export interface Category {
