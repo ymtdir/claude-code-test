@@ -3,10 +3,10 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { MainTabNavigator } from './MainTabNavigator';
 
 // 画面コンポーネントのインポート
-import { CalendarScreen } from '../screens/Calendar/CalendarScreen';
-import { MonthViewScreen } from '../screens/Calendar/MonthViewScreen';
-import { WeekViewScreen } from '../screens/Calendar/WeekViewScreen';
-import { DayViewScreen } from '../screens/Calendar/DayViewScreen';
+import { CalendarScreen } from '../screens/calendar/CalendarScreen';
+import { MonthViewScreen } from '../screens/calendar/MonthViewScreen';
+import { WeekViewScreen } from '../screens/calendar/WeekViewScreen';
+import { DayViewScreen } from '../screens/calendar/DayViewScreen';
 import { StatisticsScreen } from '../screens/Statistics/StatisticsScreen';
 import { SettingsScreen } from '../screens/Settings/SettingsScreen';
 import { TaskAddScreen } from '../screens/modals/TaskAddScreen';
