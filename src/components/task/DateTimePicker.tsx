@@ -11,7 +11,6 @@ import {
   StyleSheet,
   Platform,
 } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
 
 interface DateTimePickerProps {
   date: Date;
@@ -28,16 +27,6 @@ export const DateTimePickerComponent: React.FC<DateTimePickerProps> = ({
 }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
-
-  // 日付と時刻を結合してDateオブジェクトを作成
-  const getDateTime = (): Date => {
-    const dateTime = new Date(date);
-    if (time) {
-      const [hours, minutes] = time.split(':').map(Number);
-      dateTime.setHours(hours, minutes, 0, 0);
-    }
-    return dateTime;
-  };
 
   // 日付の変更ハンドラー
   const handleDateChange = (_event: unknown, selectedDate?: Date) => {
@@ -105,27 +94,46 @@ export const DateTimePickerComponent: React.FC<DateTimePickerProps> = ({
         </TouchableOpacity>
       </View>
 
-      {/* 日付ピッカー */}
-      {showDatePicker && (
-        <DateTimePicker
-          testID="datePicker"
-          value={date}
-          mode="date"
-          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-          onChange={handleDateChange}
-          minimumDate={new Date()}
+      {/* 日付ピッカー（Web用のHTML input） */}
+      {showDatePicker && Platform.OS === 'web' && (
+        <input
+          type="date"
+          value={date.toISOString().split('T')[0]}
+          onChange={(e) => {
+            const newDate = new Date(e.target.value);
+            handleDateChange(null, newDate);
+            setShowDatePicker(false);
+          }}
+          min={new Date().toISOString().split('T')[0]}
+          style={{
+            position: 'absolute',
+            opacity: 0,
+            pointerEvents: 'auto',
+          }}
+          autoFocus
+          onBlur={() => setShowDatePicker(false)}
         />
       )}
 
-      {/* 時刻ピッカー */}
-      {showTimePicker && (
-        <DateTimePicker
-          testID="timePicker"
-          value={getDateTime()}
-          mode="time"
-          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-          onChange={handleTimeChange}
-          is24Hour={true}
+      {/* 時刻ピッカー（Web用のHTML input） */}
+      {showTimePicker && Platform.OS === 'web' && (
+        <input
+          type="time"
+          value={time || '00:00'}
+          onChange={(e) => {
+            const [hours, minutes] = e.target.value.split(':');
+            const newTime = new Date();
+            newTime.setHours(parseInt(hours), parseInt(minutes));
+            handleTimeChange(null, newTime);
+            setShowTimePicker(false);
+          }}
+          style={{
+            position: 'absolute',
+            opacity: 0,
+            pointerEvents: 'auto',
+          }}
+          autoFocus
+          onBlur={() => setShowTimePicker(false)}
         />
       )}
     </View>
