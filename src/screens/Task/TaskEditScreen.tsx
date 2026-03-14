@@ -21,9 +21,9 @@ export function TaskEditScreen() {
 
   // タスクデータの取得
   useEffect(() => {
-    const loadTask = () => {
+    const loadTask = async () => {
       try {
-        const taskData = TaskManager.getTaskById(taskId);
+        const taskData = await TaskManager.getTaskById(taskId);
         if (taskData) {
           setTask(taskData);
         } else {
@@ -51,10 +51,10 @@ export function TaskEditScreen() {
   }, [taskId, navigate]);
 
   // タスク更新処理
-  const handleUpdateTask = (taskData: TaskInput) => {
+  const handleUpdateTask = async (taskData: TaskInput) => {
     try {
       // タスクを更新
-      const updatedTask = TaskManager.updateTask(taskId, taskData);
+      const updatedTask = await TaskManager.updateTask(taskId, taskData);
 
       if (updatedTask) {
         // 成功メッセージを表示
@@ -78,10 +78,10 @@ export function TaskEditScreen() {
   };
 
   // タスク削除処理
-  const handleDeleteTask = () => {
+  const handleDeleteTask = async () => {
     try {
       // タスクを削除
-      const deleted = TaskManager.deleteTask(taskId);
+      const deleted = await TaskManager.deleteTask(taskId);
 
       if (deleted) {
         // 成功メッセージを表示

@@ -4,11 +4,17 @@
  * データベース（IndexedDB）を使用した永続化対応版
  */
 
-import type { Task, TaskInput, TaskStatus, Priority } from '../types/task';
+import type {
+  Task,
+  TaskInput,
+  TaskStatus,
+  Priority,
+  Category,
+} from '../types/task';
 import { DEFAULT_CATEGORY } from '../constants/categories';
 import { TaskRepository } from '../repositories';
 import { TaskModel } from '../database/models';
-import { TaskSchema } from '../database/schema';
+import type { TaskSchema } from '../database/schema';
 
 export class TaskManager {
   /**
@@ -18,7 +24,7 @@ export class TaskManager {
     return {
       id: model.id,
       title: model.title,
-      category: model.category,
+      category: model.category as Category,
       date: model.date,
       time: model.time,
       priority: model.priority,
