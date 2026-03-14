@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { TaskRepository } from '../repositories';
 import { TaskModel } from '../database/models';
-import { TaskSchema } from '../database/schema';
+import type { TaskSchema } from '../database/schema';
 
 interface MutationState {
   isLoading: boolean;

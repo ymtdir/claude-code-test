@@ -175,7 +175,7 @@ export function useTaskSubscription(
   }) => void
 ) {
   useEffect(() => {
-    const subscription = db.tasks.hook('creating', function (primKey, obj) {
+    const subscription = db.tasks.hook('creating', function (_primKey, obj) {
       // Task is being created
       const taskModel = TaskModel.fromDatabase(obj);
       callback({ created: [taskModel], updated: [], deleted: [] });
@@ -183,7 +183,7 @@ export function useTaskSubscription(
 
     const updateSubscription = db.tasks.hook(
       'updating',
-      function (modifications, primKey) {
+      function (_modifications, primKey) {
         // Task is being updated
         db.tasks.get(primKey).then((task) => {
           if (task) {
@@ -200,9 +200,10 @@ export function useTaskSubscription(
     });
 
     return () => {
-      subscription.unsubscribe();
-      updateSubscription.unsubscribe();
-      deleteSubscription.unsubscribe();
+      // Dexie hooks don't return unsubscribe functions, they are auto-cleaned on db close
+      void subscription;
+      void updateSubscription;
+      void deleteSubscription;
     };
   }, [callback]);
 }

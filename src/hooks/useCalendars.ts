@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { CalendarModel } from '../database/models';
 import { CalendarRepository } from '../repositories';
-import { CalendarSchema } from '../database/schema';
+import type { CalendarSchema } from '../database/schema';
 
 /**
  * Hook to get all calendars with live updates

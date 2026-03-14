@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { ReminderModel } from '../database/models';
 import { ReminderRepository } from '../repositories';
-import { ReminderSchema } from '../database/schema';
+import type { ReminderSchema } from '../database/schema';
 
 /**
  * Hook to get all reminders with live updates
