@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { ReminderSchema } from '../schema/reminderSchema';
+import type { ReminderSchema } from '../schema/reminderSchema';
 
 export class ReminderModel implements ReminderSchema {
   id: string;

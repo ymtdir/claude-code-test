@@ -1,10 +1,7 @@
-import Dexie, { Table } from 'dexie';
-import {
-  TaskSchema,
-  CalendarSchema,
-  ReminderSchema,
-  databaseSchema,
-} from './schema';
+import Dexie from 'dexie';
+import type { Table } from 'dexie';
+import { databaseSchema } from './schema';
+import type { TaskSchema, CalendarSchema, ReminderSchema } from './schema';
 
 export class UnifiedCalDatabase extends Dexie {
   // Declare tables
@@ -19,34 +16,34 @@ export class UnifiedCalDatabase extends Dexie {
     this.version(1).stores(databaseSchema);
 
     // Add hooks for automatic timestamp management
-    this.tasks.hook('creating', (primKey, obj) => {
+    this.tasks.hook('creating', (_primKey, obj) => {
       const now = new Date();
       obj.createdAt = now;
       obj.updatedAt = now;
     });
 
     this.tasks.hook('updating', (modifications) => {
-      modifications.updatedAt = new Date();
+      return { ...modifications, updatedAt: new Date() };
     });
 
-    this.calendars.hook('creating', (primKey, obj) => {
+    this.calendars.hook('creating', (_primKey, obj) => {
       const now = new Date();
       obj.createdAt = now;
       obj.updatedAt = now;
     });
 
     this.calendars.hook('updating', (modifications) => {
-      modifications.updatedAt = new Date();
+      return { ...modifications, updatedAt: new Date() };
     });
 
-    this.reminders.hook('creating', (primKey, obj) => {
+    this.reminders.hook('creating', (_primKey, obj) => {
       const now = new Date();
       obj.createdAt = now;
       obj.updatedAt = now;
     });
 
     this.reminders.hook('updating', (modifications) => {
-      modifications.updatedAt = new Date();
+      return { ...modifications, updatedAt: new Date() };
     });
   }
 

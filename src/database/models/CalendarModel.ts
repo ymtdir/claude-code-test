@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { CalendarSchema } from '../schema/calendarSchema';
+import type { CalendarSchema } from '../schema/calendarSchema';
 
 export class CalendarModel implements CalendarSchema {
   id: string;

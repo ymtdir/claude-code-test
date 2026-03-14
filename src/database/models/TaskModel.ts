@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { TaskSchema } from '../schema/taskSchema';
+import type { TaskSchema } from '../schema/taskSchema';
 
 export class TaskModel implements TaskSchema {
   id: string;
