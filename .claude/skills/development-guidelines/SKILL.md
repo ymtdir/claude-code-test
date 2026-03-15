@@ -1,6 +1,6 @@
 ---
 name: development-guidelines
-description: チーム全体で統一された開発プロセスとコーディング規約を確立するための包括的なガイドとテンプレート。開発ガイドライン作成時、コード実装時に使用する。
+description: 開発ガイドライン（コーディング規約・開発プロセス）を作成する。「開発ガイドライン」「コーディング規約」と言われた時、コード実装時の規約確認、または/setup-projectのステップ5で使用。docs/development-guidelines.mdに出力。
 allowed-tools: Read, Write, Edit
 ---
 
@@ -24,20 +24,9 @@ allowed-tools: Read, Write, Edit
 
 ## 既存ドキュメントの優先順位
 
-**重要**: `docs/development-guidelines.md` に既存の開発ガイドラインがある場合、
-以下の優先順位に従ってください:
+詳細は `../shared/references/document-priority-pattern.md` を参照。
 
-1. **既存の開発ガイドライン (`docs/development-guidelines.md`)** - 最優先
-   - プロジェクト固有の規約とプロセスが記載されている
-   - このスキルのガイドより優先する
-
-2. **このスキルのガイド** - 参考資料
-   - ./guides/implementation.md: 汎用的なコーディング規約
-   - ./guides/process.md: 汎用的な開発プロセス
-   - 既存ガイドラインがない場合、または補足として使用
-
-**新規作成時**: このスキルのガイドとテンプレートを参照
-**更新時**: 既存ガイドラインの構造と内容を維持しながら更新
+**対象ファイル**: `docs/development-guidelines.md`
 
 ## 出力先
 
@@ -50,7 +39,7 @@ docs/development-guidelines.md
 ## クイックリファレンス
 
 ### コード実装時
-コード実装時のルールと規約: ./guides/implementation.md
+コード実装時のルールと規約: ./references/implementation-guide.md
 
 含まれる内容:
 - TypeScript/JavaScript規約
@@ -62,7 +51,7 @@ docs/development-guidelines.md
 - リファクタリング手法
 
 ### 開発プロセスの参照／策定時
-Git運用、テスト戦略、コードレビュー: ./guides/process.md
+Git運用、テスト戦略、コードレビュー: ./references/process-guide.md
 
 含まれる内容:
 - 基本原則（具体例の重要性、理由説明）
@@ -73,26 +62,26 @@ Git運用、テスト戦略、コードレビュー: ./guides/process.md
 - 品質自動化
 
 ### テンプレート
-開発ガイドライン作成時: ./template.md
+開発ガイドライン作成時: ./assets/template.md
 
 
 ## 使用シーン別ガイド
 
 ### 新規開発時
-1. ./guides/implementation.md で命名規則・コーディング規約を確認
-2. ./guides/process.md でブランチ戦略・PR処理を確認
+1. ./references/implementation-guide.md で命名規則・コーディング規約を確認
+2. ./references/process-guide.md でブランチ戦略・PR処理を確認
 3. テストを先に書く（TDD）
 
 ### コードレビュー時
-- ./guides/process.md の「コードレビュープロセス」を参照
-- ./guides/implementation.md で規約違反がないか確認
+- ./references/process-guide.md の「コードレビュープロセス」を参照
+- ./references/implementation-guide.md で規約違反がないか確認
 
 ### テスト設計時
-- ./guides/process.md の「テスト戦略」（ピラミッド、カバレッジ）
-- ./guides/implementation.md の「テストコード」（実装パターン）
+- ./references/process-guide.md の「テスト戦略」（ピラミッド、カバレッジ）
+- ./references/implementation-guide.md の「テストコード」（実装パターン）
 
 ### リリース準備時
-- ./guides/process.md の「Git運用ルール」（main へのマージ方針）
+- ./references/process-guide.md の「Git運用ルール」（main へのマージ方針）
 - コミットメッセージが Conventional Commits に従っているか確認
 
 ## チェックリスト
@@ -106,3 +95,10 @@ Git運用、テスト戦略、コードレビュー: ./guides/process.md
 - [ ] テストの種類とカバレッジ目標が設定されている
 - [ ] コードレビュープロセスが定義されている
 - [ ] CI/CDパイプラインが構築されている
+
+## トラブルシューティング
+
+- **推奨ドキュメントが不足**: `docs/architecture.md` と `docs/repository-structure.md` がなくても作成可能ですが、技術スタックに合った規約にするため事前作成を推奨します。
+- **テンプレートが見つからない**: `./assets/template.md` のパスを確認してください。
+- **ガイドファイルが見つからない**: `./references/implementation-guide.md` および `./references/process-guide.md` のパスを確認してください。
+- **既存のガイドラインとの競合**: `../shared/references/document-priority-pattern.md` の優先順位ルールに従ってください。

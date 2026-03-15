@@ -1,6 +1,6 @@
 ---
 name: repository-structure
-description: リポジトリ構造定義書を作成するための詳細ガイドとテンプレート。リポジトリ構造定義時にのみ使用。
+description: リポジトリ構造定義書を作成する。「リポジトリ構造」「ディレクトリ構造」と言われた時、または/setup-projectのステップ4で使用。docs/repository-structure.mdに出力。
 allowed-tools: Read, Write
 ---
 
@@ -22,18 +22,9 @@ allowed-tools: Read, Write
 
 ## 既存ドキュメントの優先順位
 
-**重要**: `docs/repository-structure.md` に既存のリポジトリ構造定義書がある場合、以下の優先順位に従ってください:
+詳細は `../shared/references/document-priority-pattern.md` を参照。
 
-1. **既存のリポジトリ構造定義書 (`docs/repository-structure.md`)** - 最優先
-   - プロジェクト固有のディレクトリ構造が記載されている
-   - このスキルのガイドより優先する
-
-2. **このスキルのガイド** - 参考資料
-   - 汎用的なテンプレートと例
-   - 既存定義書がない場合、または補足として使用
-
-**新規作成時**: このスキルのテンプレートとガイドを参照
-**更新時**: 既存定義書の構造と内容を維持しながら更新
+**対象ファイル**: `docs/repository-structure.md`
 
 ## 出力先
 
@@ -45,8 +36,14 @@ docs/repository-structure.md
 
 ## テンプレートの参照
 
-リポジトリ構造定義書を作成する際は、次のテンプレートを使用してください: ./template.md
+リポジトリ構造定義書を作成する際は、次のテンプレートを使用してください: ./assets/template.md
 
 ## 詳細ガイド
 
-さらに詳しい作成ガイドは次のファイルを参照してください: ./guide.md
+さらに詳しい作成ガイドは次のファイルを参照してください: ./references/guide.md
+
+## トラブルシューティング
+
+- **前提ドキュメントが不足**: PRD、機能設計書、アーキテクチャ設計書が必要です。不足している場合は先に作成してください。
+- **テンプレートが見つからない**: `./assets/template.md` のパスを確認してください。
+- **既存の定義書との競合**: `../shared/references/document-priority-pattern.md` の優先順位ルールに従ってください。

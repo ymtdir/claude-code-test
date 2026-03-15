@@ -1,6 +1,6 @@
 ---
 name: functional-design
-description: 機能設計書を作成するための詳細ガイドとテンプレート。機能設計書作成時にのみ使用。
+description: 機能設計書を作成する。「機能設計書を作成」「functional design」と言われた時、または/setup-projectのステップ2で使用。PRDが前提。docs/functional-design.mdに出力。
 allowed-tools: Read, Write
 ---
 
@@ -22,19 +22,9 @@ allowed-tools: Read, Write
 
 ## 既存ドキュメントの優先順位
 
-**重要**: `docs/functional-design.md` に既存の機能設計書がある場合、
-以下の優先順位に従ってください:
+詳細は `../shared/references/document-priority-pattern.md` を参照。
 
-1. **既存の機能設計書 (`docs/functional-design.md`)** - 最優先
-   - プロジェクト固有の設計が記載されている
-   - このスキルのガイドより優先する
-
-2. **このスキルのガイド** - 参考資料
-   - 汎用的なテンプレートと例
-   - 既存設計書がない場合、または補足として使用
-
-**新規作成時**: このスキルのテンプレートとガイドを参照
-**更新時**: 既存設計書の構造と内容を維持しながら更新
+**対象ファイル**: `docs/functional-design.md`
 
 ## 出力先
 
@@ -46,8 +36,14 @@ docs/functional-design.md
 
 ## テンプレートの参照
 
-機能設計書を作成する際は、次のテンプレートを使用してください: ./template.md
+機能設計書を作成する際は、次のテンプレートを使用してください: ./assets/template.md
 
 ## 詳細ガイド
 
-さらに詳しい作成ガイドは次のファイルを参照してください: ./guide.md
+さらに詳しい作成ガイドは次のファイルを参照してください: ./references/guide.md
+
+## トラブルシューティング
+
+- **PRDが存在しない**: 先に `docs/product-requirements.md` を作成してください。`/setup-project` のステップ1で作成できます。
+- **テンプレートが見つからない**: `./assets/template.md` のパスを確認してください。
+- **既存の機能設計書との競合**: `../shared/references/document-priority-pattern.md` の優先順位ルールに従ってください。

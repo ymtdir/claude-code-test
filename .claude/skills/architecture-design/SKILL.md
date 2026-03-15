@@ -1,6 +1,6 @@
 ---
 name: architecture-design
-description: アーキテクチャ設計書を作成するための詳細ガイドとテンプレート。アーキテクチャ設計時にのみ使用。
+description: アーキテクチャ設計書を作成する。「アーキテクチャ設計」「技術仕様書」と言われた時、または/setup-projectのステップ3で使用。PRDと機能設計書が前提。docs/architecture.mdに出力。
 allowed-tools: Read, Write
 ---
 
@@ -22,19 +22,9 @@ allowed-tools: Read, Write
 
 ## 既存ドキュメントの優先順位
 
-**重要**: `docs/architecture.md` に既存のアーキテクチャ設計書がある場合、
-以下の優先順位に従ってください:
+詳細は `../shared/references/document-priority-pattern.md` を参照。
 
-1. **既存のアーキテクチャ設計書 (`docs/architecture.md`)** - 最優先
-   - プロジェクト固有の技術選定と設計が記載されている
-   - このスキルのガイドより優先する
-
-2. **このスキルのガイド** - 参考資料
-   - 汎用的なテンプレートと例
-   - 既存設計書がない場合、または補足として使用
-
-**新規作成時**: このスキルのテンプレートとガイドを参照
-**更新時**: 既存設計書の構造と内容を維持しながら更新
+**対象ファイル**: `docs/architecture.md`
 
 ## 出力先
 
@@ -47,5 +37,11 @@ docs/architecture.md
 ## テンプレートの参照
 
 アーキテクチャ設計書を作成する際は、次のガイドを参照しながら、テンプレートを使用してください:
-- ガイド: ./guide.md
-- テンプレート: ./template.md
+- ガイド: ./references/guide.md
+- テンプレート: ./assets/template.md
+
+## トラブルシューティング
+
+- **前提ドキュメントが不足**: `docs/product-requirements.md` と `docs/functional-design.md` の両方が必要です。不足している場合は先に作成してください。
+- **テンプレートが見つからない**: `./assets/template.md` のパスを確認してください。
+- **既存の設計書との競合**: `../shared/references/document-priority-pattern.md` の優先順位ルールに従ってください。

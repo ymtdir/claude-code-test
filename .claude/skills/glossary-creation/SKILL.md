@@ -1,6 +1,6 @@
 ---
 name: glossary-creation
-description: 用語集を作成するための詳細ガイドとテンプレート。用語集作成時にのみ使用。
+description: プロジェクト用語集を作成する。「用語集」「glossary」と言われた時、または/setup-projectのステップ6で使用。docs/glossary.mdに出力。
 allowed-tools: Read, Write
 ---
 
@@ -25,19 +25,9 @@ allowed-tools: Read, Write
 
 ## 既存ドキュメントの優先順位
 
-**重要**: `docs/glossary.md` に既存の用語集がある場合、
-以下の優先順位に従ってください:
+詳細は `../shared/references/document-priority-pattern.md` を参照。
 
-1. **既存の用語集 (`docs/glossary.md`)** - 最優先
-   - プロジェクト固有の用語定義が記載されている
-   - このスキルのガイドより優先する
-
-2. **このスキルのガイド** - 参考資料
-   - 汎用的なテンプレートと例
-   - 既存用語集がない場合、または補足として使用
-
-**新規作成時**: このスキルのテンプレートとガイドを参照
-**更新時**: 既存用語集の構造と内容を維持しながら更新
+**対象ファイル**: `docs/glossary.md`
 
 ## 出力先
 
@@ -49,8 +39,14 @@ docs/glossary.md
 
 ## テンプレートの参照
 
-用語集を作成する際は、次のテンプレートを使用してください ./template.md
+用語集を作成する際は、次のテンプレートを使用してください: ./assets/template.md
 
 ## 詳細ガイド
 
-さらに詳しい作成ガイドは次のファイルを参照してください: ./guide.md
+さらに詳しい作成ガイドは次のファイルを参照してください: ./references/guide.md
+
+## トラブルシューティング
+
+- **推奨ドキュメントが不足**: 他のドキュメントがなくても用語集は作成可能ですが、用語の抽出元として事前作成を推奨します。
+- **テンプレートが見つからない**: `./assets/template.md` のパスを確認してください。
+- **既存の用語集との競合**: `../shared/references/document-priority-pattern.md` の優先順位ルールに従ってください。
