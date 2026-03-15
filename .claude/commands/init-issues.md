@@ -1,5 +1,5 @@
 ---
-description: /setup-project完了後に初期開発Issue群を一括作成。プロジェクトドキュメントを分析し依存関係付きIssueセットを生成。使用例: /init-issues
+description: /setup-project完了後に初期開発Issue群を一括作成。プロジェクトドキュメントを分析し依存関係付きIssueセットを生成。
 ---
 
 # 初期Issue一括作成

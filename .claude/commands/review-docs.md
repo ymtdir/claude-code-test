@@ -1,5 +1,5 @@
 ---
-description: doc-reviewerサブエージェントによるドキュメント詳細レビュー。引数にドキュメントパスを指定。使用例: /review-docs docs/product-requirements.md
+description: doc-reviewerサブエージェントによるドキュメント詳細レビュー。引数にドキュメントパスを指定。
 ---
 
 # ドキュメントレビュー

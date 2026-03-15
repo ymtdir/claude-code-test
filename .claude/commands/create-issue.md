@@ -1,5 +1,5 @@
 ---
-description: 課題をGitHub Issueとして作成。種類を分類しテンプレート適用後GitHubに投稿。使用例: /create-issue ログアウト時にセッションが残るバグ
+description: 課題をGitHub Issueとして作成。種類を分類しテンプレート適用後GitHubに投稿。
 ---
 
 # 開発中の課題をIssue化
