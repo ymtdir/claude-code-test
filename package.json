@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@react-native-community/datetimepicker": "^8.6.0",
+    "@reduxjs/toolkit": "^2.11.2",
     "date-fns": "^4.1.0",
     "dexie": "^4.3.0",
     "dexie-react-hooks": "^4.2.0",
@@ -34,7 +35,9 @@
     "react-native-safe-area-context": "^5.7.0",
     "react-native-vector-icons": "^10.3.0",
     "react-native-web": "^0.21.2",
+    "react-redux": "^9.2.0",
     "react-router-dom": "^6.30.3",
+    "redux-persist": "^6.0.0",
     "uuid": "^13.0.0"
   },
   "devDependencies": {
