@@ -38,15 +38,17 @@ vi.mock('../../screens/modals/ReminderScreen', () => ({
 }));
 
 describe('AppNavigator', () => {
-  it('レンダリングと初期ルートの表示', () => {
+  it('レンダリングと初期ルートの表示', async () => {
     render(
       <BrowserRouter>
         <AppNavigator />
       </BrowserRouter>
     );
 
-    // デフォルトでカレンダー画面が表示される
-    expect(screen.getByText('Calendar Screen')).toBeInTheDocument();
+    // デフォルトでカレンダー画面が表示される（動的インポートのため非同期で待機）
+    await waitFor(() => {
+      expect(screen.getByText('Calendar Screen')).toBeInTheDocument();
+    });
   });
 
   it('メインタブナビゲータが正しくレンダリングされる', () => {
@@ -69,8 +71,10 @@ describe('AppNavigator', () => {
       </BrowserRouter>
     );
 
-    // 初期状態はカレンダー画面
-    expect(screen.getByText('Calendar Screen')).toBeInTheDocument();
+    // 初期状態はカレンダー画面（動的インポートのため非同期で待機）
+    await waitFor(() => {
+      expect(screen.getByText('Calendar Screen')).toBeInTheDocument();
+    });
 
     // 統計タブをクリック
     const statisticsTab = screen.getByText('統計');
