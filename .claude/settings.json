@@ -6,21 +6,24 @@
       "Bash(find:*)",
       "Bash(rg:*)",
       "Bash(grep:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(mkdir:*)",
+      "Bash(git:*)"
     ],
     "deny": [
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(git push:*)",
-      "Bash(git reset:*)",
-      "Bash(git rebase:*)",
       "Read(./.env)",
       "Read(./.env.*)",
       "Read(./secrets/**)",
       "Read(./config/credentials.json)",
       "Read(./build)"
     ],
-    "ask": []
+    "ask": [
+      "Bash(git revert:*)",
+      "Bash(git push:*)",
+      "Bash(git reset --hard:*)"
+    ]
   },
   "sandbox": {
     "enabled": true,
@@ -82,6 +85,6 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "~/.claude/statusline.sh"
+    "command": "./statusline.sh"
   }
 }
