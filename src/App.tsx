@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 import { AppNavigator } from './navigation/AppNavigator';
 import { useDatabase } from './hooks/useDatabase';
 import { DatabaseMigration } from './utils/migration';
+import { store, persistor } from './store';
 import './App.css';
 
 function App() {
@@ -55,21 +58,25 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
-      {migrationStatus && (
-        <div
-          style={{
-            padding: '10px',
-            backgroundColor: '#f0f0f0',
-            textAlign: 'center',
-            fontSize: '12px',
-          }}
-        >
-          {migrationStatus}
-        </div>
-      )}
-      <AppNavigator />
-    </BrowserRouter>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <BrowserRouter>
+          {migrationStatus && (
+            <div
+              style={{
+                padding: '10px',
+                backgroundColor: '#f0f0f0',
+                textAlign: 'center',
+                fontSize: '12px',
+              }}
+            >
+              {migrationStatus}
+            </div>
+          )}
+          <AppNavigator />
+        </BrowserRouter>
+      </PersistGate>
+    </Provider>
   );
 }
 
