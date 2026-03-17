@@ -2,11 +2,13 @@ import React from 'react';
 import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import { styles } from './TodayTaskList.styles';
 import type { Task } from '../../../mocks/taskData';
+import AnimatedTaskItem from '../../task/AnimatedTaskItem';
 
 interface TodayTaskListProps {
   tasks: Task[];
   onTaskComplete: (taskId: string) => void;
   onTaskPostpone?: (taskId: string) => void;
+  useAnimations?: boolean;
 }
 
 /**
@@ -16,28 +18,44 @@ interface TodayTaskListProps {
 export const TodayTaskList: React.FC<TodayTaskListProps> = ({
   tasks,
   onTaskComplete,
+  onTaskPostpone = () => {},
+  useAnimations = true,
 }) => {
-  const renderTaskItem = ({ item }: { item: Task }) => (
-    <TouchableOpacity
-      style={styles.taskItem}
-      onPress={() => onTaskComplete(item.id)}
-    >
-      <View style={styles.taskCheckbox}>
-        {item.completed && <Text style={styles.checkmark}>✓</Text>}
-      </View>
-      <View style={styles.taskContent}>
-        <Text
-          style={[
-            styles.taskTitle,
-            item.completed && styles.taskTitleCompleted,
-          ]}
-        >
-          {item.title}
-        </Text>
-        {item.time && <Text style={styles.taskTime}>{item.time}</Text>}
-      </View>
-    </TouchableOpacity>
-  );
+  const renderTaskItem = ({ item }: { item: Task }) => {
+    if (useAnimations) {
+      return (
+        <AnimatedTaskItem
+          task={item}
+          onComplete={onTaskComplete}
+          onPostpone={onTaskPostpone}
+          showAnimations={true}
+          enableSwipe={true}
+        />
+      );
+    }
+
+    return (
+      <TouchableOpacity
+        style={styles.taskItem}
+        onPress={() => onTaskComplete(item.id)}
+      >
+        <View style={styles.taskCheckbox}>
+          {item.completed && <Text style={styles.checkmark}>✓</Text>}
+        </View>
+        <View style={styles.taskContent}>
+          <Text
+            style={[
+              styles.taskTitle,
+              item.completed && styles.taskTitleCompleted,
+            ]}
+          >
+            {item.title}
+          </Text>
+          {item.time && <Text style={styles.taskTime}>{item.time}</Text>}
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   if (tasks.length === 0) {
     return (
