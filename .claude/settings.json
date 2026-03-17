@@ -11,7 +11,9 @@
       "Bash(npm run:*)",
       "Bash(mkdir:*)",
       "Bash(git:*)",
-      "Bash(gh api:*)"
+      "Bash(gh api:*)",
+      "WebFetch(*)",
+      "WebSearch(*)"
     ],
     "deny": [
       "Read(./.env)",
