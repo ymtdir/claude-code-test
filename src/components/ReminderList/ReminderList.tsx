@@ -15,6 +15,7 @@ import {
 import { selectAllTasks } from '../../store/slices/tasksSlice';
 import NotificationService from '../../services/NotificationService';
 import type { Reminder } from '../../types/reminder';
+import type { TaskSchema } from '../../database/schema/taskSchema';
 import './ReminderList.css';
 
 interface ReminderListProps {
@@ -39,15 +40,17 @@ export const ReminderList: React.FC<ReminderListProps> = ({
   const filteredReminders = useMemo(() => {
     let reminders = showInactive
       ? activeReminders
-      : activeReminders.filter((r) => r.isActive);
+      : activeReminders.filter((r: Reminder) => r.isActive);
 
     if (filterTaskId) {
-      reminders = reminders.filter((r) => r.taskId === filterTaskId);
+      reminders = reminders.filter((r: Reminder) => r.taskId === filterTaskId);
     }
 
     // タスク情報を付加
-    return reminders.map((reminder) => {
-      const task = allTasks.find((t) => t.id === reminder.taskId);
+    return reminders.map((reminder: Reminder) => {
+      const task = (allTasks as TaskSchema[]).find(
+        (t: TaskSchema) => t.id === reminder.taskId
+      );
       return {
         ...reminder,
         taskTitle: task?.title || 'Unknown Task',

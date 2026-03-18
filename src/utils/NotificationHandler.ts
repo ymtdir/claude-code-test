@@ -173,7 +173,7 @@ export class NotificationHandler {
   ): Promise<void> {
     const { tag, action, taskId, reminderId } = data;
 
-    const handlers = this.actionHandlers.get(tag) || [];
+    const handlers = this.actionHandlers.get(tag || '') || [];
     const handler = handlers.find(
       (h) =>
         h.taskId === taskId &&
@@ -187,16 +187,17 @@ export class NotificationHandler {
       // デフォルトアクションの処理
       switch (action as NotificationActionType) {
         case 'complete':
-          await this.handleCompleteAction(taskId);
+          if (taskId) await this.handleCompleteAction(taskId);
           break;
         case 'snooze':
-          await this.handleSnoozeAction(taskId, reminderId);
+          if (taskId && reminderId)
+            await this.handleSnoozeAction(taskId, reminderId);
           break;
         case 'dismiss':
-          this.handleDismissAction(reminderId);
+          if (reminderId) this.handleDismissAction(reminderId);
           break;
         case 'open':
-          this.handleOpenAction(taskId);
+          if (taskId) this.handleOpenAction(taskId);
           break;
         default:
           console.warn(`Unknown action: ${action}`);
@@ -210,8 +211,10 @@ export class NotificationHandler {
   private handleNotificationClose(data: NotificationData): void {
     const { tag } = data;
     // クリーンアップ処理
-    this.clickHandlers.delete(tag);
-    this.actionHandlers.delete(tag);
+    if (tag) {
+      this.clickHandlers.delete(tag);
+      this.actionHandlers.delete(tag);
+    }
   }
 
   /**
@@ -288,17 +291,20 @@ export class NotificationHandler {
 
   /**
    * スヌーズオプションの選択ダイアログ表示
+   * @param _taskId - 将来的にタスク固有のスヌーズ設定に使用
+   * @param _reminderId - 将来的にリマインダー固有の設定に使用
    */
   async showSnoozeOptions(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    taskId: string,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    reminderId: string
+    _taskId: string,
+    _reminderId: string
   ): Promise<SnoozeOption | null> {
     // 実際のUIでは、モーダルやドロップダウンで選択肢を表示
     // ここではダミーの実装
-    // 将来的にはtaskIdとreminderIdを使用して適切なUIを表示
     // const options: SnoozeOption[] = [5, 10, 15, 30, 60] as SnoozeOption[];
+
+    // TODO: 将来的にはtaskIdとreminderIdを使用して適切なUIを表示
+    void _taskId; // 未使用パラメーターの警告を抑制
+    void _reminderId; // 未使用パラメーターの警告を抑制
 
     // デフォルトで10分を返す
     return 10 as SnoozeOption;

@@ -3,8 +3,9 @@
  * リマインダー機能の状態管理
  */
 
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { RootState } from '../store';
+import { createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import type { RootState } from '..';
 import type {
   Reminder,
   CreateReminderDto,
@@ -153,13 +154,13 @@ export const selectAllReminders = (state: RootState) =>
   state.reminder.reminders;
 
 export const selectActiveReminders = (state: RootState) =>
-  state.reminder.reminders.filter((r) => r.isActive);
+  state.reminder.reminders.filter((r: Reminder) => r.isActive);
 
 export const selectRemindersByTaskId = (taskId: string) => (state: RootState) =>
-  state.reminder.reminders.filter((r) => r.taskId === taskId);
+  state.reminder.reminders.filter((r: Reminder) => r.taskId === taskId);
 
 export const selectReminderById = (id: string) => (state: RootState) =>
-  state.reminder.reminders.find((r) => r.id === id);
+  state.reminder.reminders.find((r: Reminder) => r.id === id);
 
 export const selectNotificationPermission = (state: RootState) =>
   state.reminder.notificationPermission;
@@ -175,13 +176,15 @@ export const selectRemindersWithFilter =
     let filtered = state.reminder.reminders;
 
     if (filter.taskId) {
-      filtered = filtered.filter((r) => r.taskId === filter.taskId);
+      filtered = filtered.filter((r: Reminder) => r.taskId === filter.taskId);
     }
     if (filter.type) {
-      filtered = filtered.filter((r) => r.type === filter.type);
+      filtered = filtered.filter((r: Reminder) => r.type === filter.type);
     }
     if (filter.isActive !== undefined) {
-      filtered = filtered.filter((r) => r.isActive === filter.isActive);
+      filtered = filtered.filter(
+        (r: Reminder) => r.isActive === filter.isActive
+      );
     }
 
     return filtered;

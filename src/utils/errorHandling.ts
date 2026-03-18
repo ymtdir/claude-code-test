@@ -6,36 +6,39 @@
 /**
  * エラータイプの定義
  */
-export enum ErrorType {
-  NOTIFICATION_PERMISSION = 'NOTIFICATION_PERMISSION',
-  NOTIFICATION_DISPLAY = 'NOTIFICATION_DISPLAY',
-  NOTIFICATION_SCHEDULE = 'NOTIFICATION_SCHEDULE',
-  REMINDER_CREATE = 'REMINDER_CREATE',
-  REMINDER_UPDATE = 'REMINDER_UPDATE',
-  REMINDER_DELETE = 'REMINDER_DELETE',
-  STORAGE = 'STORAGE',
-  NETWORK = 'NETWORK',
-  UNKNOWN = 'UNKNOWN',
-}
+export const ErrorType = {
+  NOTIFICATION_PERMISSION: 'NOTIFICATION_PERMISSION',
+  NOTIFICATION_DISPLAY: 'NOTIFICATION_DISPLAY',
+  NOTIFICATION_SCHEDULE: 'NOTIFICATION_SCHEDULE',
+  REMINDER_CREATE: 'REMINDER_CREATE',
+  REMINDER_UPDATE: 'REMINDER_UPDATE',
+  REMINDER_DELETE: 'REMINDER_DELETE',
+  STORAGE: 'STORAGE',
+  NETWORK: 'NETWORK',
+  UNKNOWN: 'UNKNOWN',
+} as const;
+
+export type ErrorTypeValue = (typeof ErrorType)[keyof typeof ErrorType];
 
 /**
  * カスタムエラークラス
  */
 export class ReminderError extends Error {
-  constructor(
-    public type: ErrorType,
-    message: string,
-    public originalError?: unknown
-  ) {
+  type: ErrorTypeValue;
+  originalError?: unknown;
+
+  constructor(type: ErrorTypeValue, message: string, originalError?: unknown) {
     super(message);
     this.name = 'ReminderError';
+    this.type = type;
+    this.originalError = originalError;
   }
 }
 
 /**
  * エラーメッセージのマッピング
  */
-const errorMessages: Record<ErrorType, string> = {
+const errorMessages: Record<ErrorTypeValue, string> = {
   [ErrorType.NOTIFICATION_PERMISSION]: '通知の権限がありません',
   [ErrorType.NOTIFICATION_DISPLAY]: '通知の表示に失敗しました',
   [ErrorType.NOTIFICATION_SCHEDULE]: '通知のスケジューリングに失敗しました',
@@ -50,7 +53,7 @@ const errorMessages: Record<ErrorType, string> = {
 /**
  * エラーメッセージを取得
  */
-export function getErrorMessage(type: ErrorType): string {
+export function getErrorMessage(type: ErrorTypeValue): string {
   return errorMessages[type] || errorMessages[ErrorType.UNKNOWN];
 }
 
@@ -97,7 +100,7 @@ export function logError(
  */
 export async function withErrorHandling<T>(
   fn: () => Promise<T>,
-  errorType: ErrorType,
+  errorType: ErrorTypeValue,
   context?: string
 ): Promise<T | null> {
   try {
@@ -113,7 +116,7 @@ export async function withErrorHandling<T>(
  */
 export function withSyncErrorHandling<T>(
   fn: () => T,
-  errorType: ErrorType,
+  errorType: ErrorTypeValue,
   context?: string
 ): T | null {
   try {
@@ -131,7 +134,7 @@ export async function withRetry<T>(
   fn: () => Promise<T>,
   maxRetries = 3,
   delayMs = 1000,
-  errorType = ErrorType.UNKNOWN
+  errorType: ErrorTypeValue = ErrorType.UNKNOWN
 ): Promise<T> {
   let lastError: unknown;
 
@@ -185,12 +188,14 @@ export function getUserFriendlyErrorMessage(error: unknown): string {
 /**
  * エラーの重要度を判定
  */
-export enum ErrorSeverity {
-  LOW = 'low',
-  MEDIUM = 'medium',
-  HIGH = 'high',
-  CRITICAL = 'critical',
-}
+export const ErrorSeverity = {
+  LOW: 'low',
+  MEDIUM: 'medium',
+  HIGH: 'high',
+  CRITICAL: 'critical',
+} as const;
+
+export type ErrorSeverity = (typeof ErrorSeverity)[keyof typeof ErrorSeverity];
 
 export function getErrorSeverity(error: unknown): ErrorSeverity {
   if (error instanceof ReminderError) {
@@ -220,7 +225,7 @@ export function getErrorSeverity(error: unknown): ErrorSeverity {
  */
 export interface ErrorReport {
   timestamp: string;
-  type: ErrorType;
+  type: ErrorTypeValue;
   severity: ErrorSeverity;
   message: string;
   context?: string;
@@ -234,7 +239,7 @@ export function createErrorReport(
   context?: string
 ): ErrorReport {
   const timestamp = new Date().toISOString();
-  let type = ErrorType.UNKNOWN;
+  let type: ErrorTypeValue = ErrorType.UNKNOWN;
   let message = 'Unknown error';
   let stack: string | undefined;
 

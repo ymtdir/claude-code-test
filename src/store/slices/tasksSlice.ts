@@ -8,6 +8,7 @@ import {
   createAsyncThunk,
 } from '@reduxjs/toolkit';
 import { TaskRepository } from '../../repositories/TaskRepository';
+import type { RootState } from '..';
 import type { Priority } from '../../types/task';
 import type { TaskFilter } from '../../types/store';
 import type { TaskSchema } from '../../database/schema';
@@ -210,6 +211,12 @@ export const {
   updateTaskPriority,
   clearError,
 } = tasksSlice.actions;
+
+// セレクタ
+export const selectAllTasks = (state: RootState) =>
+  state.tasks.ids.map((id) => state.tasks.entities[id]);
+export const selectTaskById = (id: string) => (state: RootState) =>
+  state.tasks.entities[id];
 
 // リデューサーのエクスポート
 export default tasksSlice.reducer;

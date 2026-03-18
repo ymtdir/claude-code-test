@@ -7,7 +7,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { ReminderSettings } from '../../components/ReminderSettings/ReminderSettings';
 import { ReminderList } from '../../components/ReminderList/ReminderList';
 import { selectTaskById } from '../../store/slices/tasksSlice';
-import type { RootState } from '../../store/store';
 import NotificationService from '../../services/NotificationService';
 import { setNotificationPermission } from '../../store/slices/reminderSlice';
 
@@ -21,9 +20,7 @@ export const ReminderScreen: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'settings' | 'list'>('settings');
 
   // Reduxからタスク情報を取得
-  const task = useSelector((state: RootState) =>
-    taskId ? selectTaskById(state, taskId) : undefined
-  );
+  const task = useSelector(taskId ? selectTaskById(taskId) : () => undefined);
 
   // 初期化時に通知権限をチェック
   useEffect(() => {
@@ -108,10 +105,10 @@ export const ReminderScreen: React.FC = () => {
         {/* タブコンテンツ */}
         {activeTab === 'settings' && task && (
           <ReminderSettings
-            taskId={task.id}
-            taskTitle={task.title}
-            taskDate={task.date}
-            taskTime={task.time}
+            taskId={task?.id || ''}
+            taskTitle={task?.title}
+            taskDate={task?.date}
+            taskTime={task?.time}
           />
         )}
 

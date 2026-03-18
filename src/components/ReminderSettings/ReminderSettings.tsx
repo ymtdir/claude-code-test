@@ -101,8 +101,6 @@ export const ReminderSettings: React.FC<ReminderSettingsProps> = ({
         }
       }
 
-      setSelectedPreset(timeOffset);
-
       if (onUpdate) {
         onUpdate(reminders);
       }
@@ -121,7 +119,7 @@ export const ReminderSettings: React.FC<ReminderSettingsProps> = ({
       );
 
       if (onUpdate) {
-        onUpdate(reminders.filter((r) => r.id !== reminderId));
+        onUpdate(reminders.filter((r: Reminder) => r.id !== reminderId));
       }
     },
     [taskId, reminders, dispatch, onUpdate]
@@ -132,7 +130,7 @@ export const ReminderSettings: React.FC<ReminderSettingsProps> = ({
     (reminderId: string) => {
       dispatch(toggleReminder(reminderId));
 
-      const reminder = reminders.find((r) => r.id === reminderId);
+      const reminder = reminders.find((r: Reminder) => r.id === reminderId);
       if (reminder) {
         if (reminder.isActive) {
           NotificationService.cancelScheduledNotification(
@@ -154,7 +152,7 @@ export const ReminderSettings: React.FC<ReminderSettingsProps> = ({
   // プリセットボタンのレンダリング
   const renderPresetButton = (label: string, offset: number) => {
     const isActive = reminders.some(
-      (r) => r.timeOffset === offset && r.isActive
+      (r: Reminder) => r.timeOffset === offset && r.isActive
     );
 
     return (
@@ -236,7 +234,7 @@ export const ReminderSettings: React.FC<ReminderSettingsProps> = ({
         <div className="active-reminders">
           <h4>設定中のリマインダー</h4>
           <ul className="reminder-list">
-            {reminders.map((reminder) => (
+            {reminders.map((reminder: Reminder) => (
               <li key={reminder.id} className="reminder-item">
                 <input
                   type="checkbox"

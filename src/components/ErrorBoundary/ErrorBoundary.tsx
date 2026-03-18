@@ -3,7 +3,8 @@
  * Reactコンポーネントのエラーをキャッチして処理する
  */
 
-import React, { Component, ReactNode } from 'react';
+import React, { Component } from 'react';
+import type { ReactNode } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import {
   logError,

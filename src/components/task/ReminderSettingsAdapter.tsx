@@ -52,7 +52,8 @@ export const ReminderSettingsAdapter: React.FC<
       reminders.forEach((reminder) => {
         const reminderData: CreateReminderDto = {
           taskId: tempTaskId,
-          type: reminder.type || 'time',
+          type:
+            (reminder.type === 'location' ? 'time' : reminder.type) || 'time',
           timeOffset: reminder.timeOffset,
         };
         dispatch(addReminder(reminderData));
@@ -67,7 +68,11 @@ export const ReminderSettingsAdapter: React.FC<
       // フォームの形式に変換
       const formReminders: Partial<Reminder>[] = updatedReminders.map(
         (reminder: NewReminderType) => ({
-          type: reminder.type,
+          id: reminder.id,
+          taskId: reminder.taskId,
+          type: (reminder.type === 'repeat' ? 'time' : reminder.type) as
+            | 'time'
+            | 'location',
           timeOffset: reminder.timeOffset,
           isActive: reminder.isActive,
         })

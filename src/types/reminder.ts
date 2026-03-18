@@ -3,12 +3,17 @@
  */
 
 /**
+ * リマインダーのタイプ
+ */
+export type ReminderType = 'time' | 'repeat';
+
+/**
  * リマインダーの基本型
  */
 export interface Reminder {
   id: string;
   taskId: string;
-  type: 'time' | 'repeat';
+  type: ReminderType;
   timeOffset?: number; // 分単位（マイナスは事前通知）
   repeatRule?: RepeatRule;
   isActive: boolean;
