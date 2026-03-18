@@ -3,6 +3,13 @@
  * ブラウザのNotification APIを使用した通知管理サービス
  */
 
+import {
+  ErrorType,
+  logError,
+  saveErrorToStorage,
+  ReminderError,
+} from '../utils/errorHandling';
+
 export class NotificationService {
   private static instance: NotificationService;
   private scheduledNotifications: Map<string, NodeJS.Timeout> = new Map();
@@ -47,6 +54,8 @@ export class NotificationService {
       const permission = await Notification.requestPermission();
       return permission === 'granted';
     } catch (error) {
+      logError(error, 'requestPermission');
+      saveErrorToStorage(error, 'requestPermission');
       console.error('通知権限のリクエストに失敗しました:', error);
       return false;
     }
@@ -64,6 +73,11 @@ export class NotificationService {
     const permission = this.checkPermission();
 
     if (permission !== 'granted') {
+      const error = new ReminderError(
+        ErrorType.NOTIFICATION_PERMISSION,
+        '通知権限がありません'
+      );
+      logError(error, 'showNotification');
       console.warn('通知権限がありません');
       return null;
     }
@@ -77,6 +91,8 @@ export class NotificationService {
 
       return notification;
     } catch (error) {
+      logError(error, 'showNotification', { title, options });
+      saveErrorToStorage(error, 'showNotification');
       console.error('通知の表示に失敗しました:', error);
       return null;
     }
