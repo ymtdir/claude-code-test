@@ -60,6 +60,11 @@ export interface TaskCardProps {
   categoryColor?: string;
 
   /**
+   * リマインダーが設定されているか
+   */
+  hasReminder?: boolean;
+
+  /**
    * タスク完了時のコールバック
    */
   onComplete?: () => void;
@@ -112,6 +117,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
   dueDate,
   category,
   categoryColor,
+  hasReminder,
   onComplete,
   onDelete,
   onPress,
@@ -285,6 +291,14 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                 >
                   {formatDueDate(dueDate).text}
                 </Text>
+              </View>
+            )}
+
+            {/* リマインダーインジケーター */}
+            {hasReminder && (
+              <View style={styles.reminderContainer}>
+                <Text style={styles.reminderIcon}>🔔</Text>
+                <Text style={styles.reminderText}>リマインダー</Text>
               </View>
             )}
           </View>

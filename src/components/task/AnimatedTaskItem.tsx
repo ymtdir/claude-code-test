@@ -28,6 +28,7 @@ export interface Task {
   completed: boolean;
   priority?: 'low' | 'medium' | 'high';
   dueDate?: Date;
+  hasReminder?: boolean;
 }
 
 interface AnimatedTaskItemProps {
@@ -175,6 +176,12 @@ export const AnimatedTaskItem: React.FC<AnimatedTaskItemProps> = ({
           )}
         </View>
 
+        {task.hasReminder && (
+          <View style={styles.reminderIndicator}>
+            <Text style={styles.reminderIcon}>🔔</Text>
+          </View>
+        )}
+
         <View
           style={[
             styles.priorityIndicator,
@@ -286,6 +293,15 @@ const styles = StyleSheet.create({
     right: 50,
     top: '50%',
     transform: [{ translateY: -15 }],
+  },
+  reminderIndicator: {
+    marginRight: 8,
+    padding: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  reminderIcon: {
+    fontSize: 18,
   },
 });
 

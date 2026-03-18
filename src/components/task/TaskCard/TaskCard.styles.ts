@@ -106,6 +106,25 @@ export const styles = StyleSheet.create({
     fontWeight: Theme.fontWeight.medium,
   },
 
+  // リマインダーコンテナ
+  reminderContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: Theme.spacing.xs,
+  },
+
+  // リマインダーアイコン
+  reminderIcon: {
+    fontSize: 14,
+    marginRight: 4,
+  },
+
+  // リマインダーテキスト
+  reminderText: {
+    ...Theme.typography.caption,
+    color: Theme.colors.primary,
+  },
+
   // チェックアイコン
   checkIcon: {
     marginLeft: Theme.spacing.md,
