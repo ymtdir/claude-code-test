@@ -17,7 +17,7 @@ import { useForm, Controller } from 'react-hook-form';
 import type { Task, TaskInput, Category, Priority } from '../../types/task';
 import { CategoryPicker } from './CategoryPicker';
 import { PrioritySelector } from './PrioritySelector';
-import { ReminderSettings } from './ReminderSettings';
+import { ReminderSettingsAdapter } from './ReminderSettingsAdapter';
 import { DateTimePickerComponent } from './DateTimePicker';
 import { validateTask } from '../../utils/validation';
 import { DEFAULT_CATEGORY } from '../../constants/categories';
@@ -149,10 +149,32 @@ export const TaskForm: React.FC<TaskFormProps> = ({
           control={control}
           name="reminders"
           render={({ field: { onChange, value } }) => (
-            <ReminderSettings
-              reminders={value || []}
-              onChange={onChange}
-              disabled={isSubmitting}
+            <Controller
+              control={control}
+              name="title"
+              render={({ field: { value: titleValue } }) => (
+                <Controller
+                  control={control}
+                  name="date"
+                  render={({ field: { value: dateValue } }) => (
+                    <Controller
+                      control={control}
+                      name="time"
+                      render={({ field: { value: timeValue } }) => (
+                        <ReminderSettingsAdapter
+                          taskId={task?.id}
+                          taskTitle={titleValue || task?.title || '新規タスク'}
+                          taskDate={dateValue}
+                          taskTime={timeValue}
+                          reminders={value || []}
+                          onChange={onChange}
+                          disabled={isSubmitting}
+                        />
+                      )}
+                    />
+                  )}
+                />
+              )}
             />
           )}
         />
