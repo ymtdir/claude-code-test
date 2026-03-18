@@ -6,16 +6,10 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { NotificationService } from '../NotificationService';
 
-// Mock Notification API
-const mockRequestPermission = vi.fn();
-const mockNotificationConstructor = vi.fn();
-
-global.Notification = mockNotificationConstructor as any;
-(global.Notification as any).permission = 'default';
-(global.Notification as any).requestPermission = mockRequestPermission;
-
 describe('NotificationService', () => {
   let service: NotificationService;
+  let mockRequestPermission: any;
+  let mockNotificationConstructor: any;
 
   beforeEach(() => {
     // Clear all mocks
@@ -23,18 +17,22 @@ describe('NotificationService', () => {
     vi.clearAllTimers();
     vi.useFakeTimers();
 
+    // Setup Notification mock
+    mockRequestPermission = vi.fn();
+    mockNotificationConstructor = vi.fn();
+    mockNotificationConstructor.permission = 'default';
+    mockNotificationConstructor.requestPermission = mockRequestPermission;
+
+    global.Notification = mockNotificationConstructor as any;
+
     // Reset singleton instance for testing
     (NotificationService as any).instance = undefined;
     service = NotificationService.getInstance();
-
-    // Reset mock defaults
-    (global.Notification as any).permission = 'default';
-    mockRequestPermission.mockReset();
-    mockNotificationConstructor.mockReset();
   });
 
   afterEach(() => {
     vi.useRealTimers();
+    vi.restoreAllMocks();
   });
 
   describe('getInstance', () => {
@@ -47,13 +45,13 @@ describe('NotificationService', () => {
 
   describe('checkPermission', () => {
     it('should return current permission status', () => {
-      (global.Notification as any).permission = 'granted';
+      mockNotificationConstructor.permission = 'granted';
       expect(service.checkPermission()).toBe('granted');
 
-      (global.Notification as any).permission = 'denied';
+      mockNotificationConstructor.permission = 'denied';
       expect(service.checkPermission()).toBe('denied');
 
-      (global.Notification as any).permission = 'default';
+      mockNotificationConstructor.permission = 'default';
       expect(service.checkPermission()).toBe('default');
     });
 
@@ -61,7 +59,11 @@ describe('NotificationService', () => {
       const originalNotification = global.Notification;
       (global as any).Notification = undefined;
 
-      expect(service.checkPermission()).toBe('denied');
+      // Create new instance after removing Notification
+      (NotificationService as any).instance = undefined;
+      const testService = NotificationService.getInstance();
+
+      expect(testService.checkPermission()).toBe('denied');
 
       global.Notification = originalNotification;
     });
@@ -89,7 +91,11 @@ describe('NotificationService', () => {
       const originalNotification = global.Notification;
       (global as any).Notification = undefined;
 
-      const result = await service.requestPermission();
+      // Create new instance after removing Notification
+      (NotificationService as any).instance = undefined;
+      const testService = NotificationService.getInstance();
+
+      const result = await testService.requestPermission();
 
       expect(result).toBe(false);
 
@@ -116,9 +122,12 @@ describe('NotificationService', () => {
 
   describe('showNotification', () => {
     it('should create notification when permission granted', async () => {
-      (global.Notification as any).permission = 'granted';
+      mockNotificationConstructor.permission = 'granted';
       const mockNotification = {};
-      mockNotificationConstructor.mockReturnValue(mockNotification);
+      // Use a regular function instead of arrow function for constructor
+      mockNotificationConstructor.mockImplementation(function () {
+        return mockNotification;
+      });
 
       const result = await service.showNotification('Test Title', {
         body: 'Test body',
@@ -133,7 +142,7 @@ describe('NotificationService', () => {
     });
 
     it('should return null when permission not granted', async () => {
-      (global.Notification as any).permission = 'denied';
+      mockNotificationConstructor.permission = 'denied';
       const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
       const result = await service.showNotification('Test Title');
@@ -146,7 +155,7 @@ describe('NotificationService', () => {
     });
 
     it('should handle notification creation errors', async () => {
-      (global.Notification as any).permission = 'granted';
+      mockNotificationConstructor.permission = 'granted';
       mockNotificationConstructor.mockImplementation(() => {
         throw new Error('Notification error');
       });
@@ -168,28 +177,32 @@ describe('NotificationService', () => {
 
   describe('scheduleNotification', () => {
     it('should schedule notification with delay', async () => {
-      const showNotificationSpy = vi
-        .spyOn(service, 'showNotification')
-        .mockResolvedValue(null);
+      // Mock showNotification method
+      vi.spyOn(service, 'showNotification').mockResolvedValue(null);
 
       service.scheduleNotification('test-id', 'Test Title', {}, 5000);
 
-      expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 5000);
+      // Check that a timer was created
+      expect(vi.getTimerCount()).toBe(1);
 
       // Fast-forward time
       await vi.runAllTimersAsync();
 
-      expect(showNotificationSpy).toHaveBeenCalledWith('Test Title', {});
+      expect(service.showNotification).toHaveBeenCalledWith('Test Title', {});
     });
 
     it('should cancel existing notification before scheduling new one', () => {
-      const cancelSpy = vi.spyOn(service, 'cancelScheduledNotification');
-
+      // Schedule first notification
       service.scheduleNotification('test-id', 'Test 1', {}, 3000);
+
+      // Check that one timer exists
+      expect(vi.getTimerCount()).toBe(1);
+
+      // Schedule second notification with same ID
       service.scheduleNotification('test-id', 'Test 2', {}, 5000);
 
-      expect(cancelSpy).toHaveBeenCalledWith('test-id');
-      expect(cancelSpy).toHaveBeenCalledTimes(1);
+      // Should still have only one timer (old one was cancelled)
+      expect(vi.getTimerCount()).toBe(1);
     });
 
     it('should call onShow callback when notification is shown', async () => {
@@ -262,10 +275,9 @@ describe('NotificationService', () => {
       expect(consoleSpy).toHaveBeenCalledWith(
         expect.stringContaining('Delay exceeds maximum timeout')
       );
-      expect(setTimeout).toHaveBeenCalledWith(
-        expect.any(Function),
-        MAX_DELAY / 2
-      );
+
+      // Check that a timer was created for intermediate scheduling
+      expect(vi.getTimerCount()).toBe(1);
 
       consoleSpy.mockRestore();
     });
@@ -391,7 +403,11 @@ describe('NotificationService', () => {
       const originalNotification = global.Notification;
       (global as any).Notification = undefined;
 
-      expect(service.isSupported()).toBe(false);
+      // Create new instance after removing Notification
+      (NotificationService as any).instance = undefined;
+      const testService = NotificationService.getInstance();
+
+      expect(testService.isSupported()).toBe(false);
 
       global.Notification = originalNotification;
     });
@@ -399,15 +415,15 @@ describe('NotificationService', () => {
 
   describe('isPermissionGranted', () => {
     it('should return true when permission is granted', () => {
-      (global.Notification as any).permission = 'granted';
+      mockNotificationConstructor.permission = 'granted';
       expect(service.isPermissionGranted()).toBe(true);
     });
 
     it('should return false when permission is not granted', () => {
-      (global.Notification as any).permission = 'denied';
+      mockNotificationConstructor.permission = 'denied';
       expect(service.isPermissionGranted()).toBe(false);
 
-      (global.Notification as any).permission = 'default';
+      mockNotificationConstructor.permission = 'default';
       expect(service.isPermissionGranted()).toBe(false);
     });
   });

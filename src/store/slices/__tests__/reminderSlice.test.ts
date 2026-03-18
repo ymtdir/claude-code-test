@@ -5,7 +5,6 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { configureStore } from '@reduxjs/toolkit';
-import { v4 as uuidv4 } from 'uuid';
 import reminderReducer, {
   addReminder,
   updateReminder,
@@ -35,14 +34,19 @@ import type {
 } from '../../../types/reminder';
 
 // Mock UUID
+const mockUuid = vi.fn();
 vi.mock('uuid', () => ({
-  v4: vi.fn(() => 'test-uuid-123'),
+  v4: () => mockUuid(),
 }));
 
 describe('reminderSlice', () => {
   let store: ReturnType<typeof configureStore>;
 
   beforeEach(() => {
+    // Reset UUID mock
+    mockUuid.mockReset();
+    mockUuid.mockReturnValue('test-uuid-123');
+
     store = configureStore({
       reducer: {
         reminder: reminderReducer,
@@ -140,15 +144,20 @@ describe('reminderSlice', () => {
         store.dispatch(addReminder({ taskId: 'task-1', type: 'time' }));
 
         // Mock UUID to return different value
-        vi.mocked(uuidv4).mockReturnValue('test-uuid-456');
+        mockUuid.mockReturnValue('test-uuid-456');
         store.dispatch(addReminder({ taskId: 'task-2', type: 'time' }));
 
-        // Delete first reminder
-        store.dispatch(deleteReminder('test-uuid-123'));
+        // Get current state to find the actual IDs
+        let state = store.getState() as { reminder: any };
+        const firstId = state.reminder.reminders[0].id;
+        const secondId = state.reminder.reminders[1].id;
 
-        const state = store.getState() as { reminder: any };
+        // Delete first reminder
+        store.dispatch(deleteReminder(firstId));
+
+        state = store.getState() as { reminder: any };
         expect(state.reminder.reminders).toHaveLength(1);
-        expect(state.reminder.reminders[0].id).toBe('test-uuid-456');
+        expect(state.reminder.reminders[0].id).toBe(secondId);
       });
     });
 
@@ -156,9 +165,9 @@ describe('reminderSlice', () => {
       it('should delete all reminders for a task', () => {
         // Add reminders for different tasks
         store.dispatch(addReminder({ taskId: 'task-1', type: 'time' }));
-        vi.mocked(uuidv4).mockReturnValue('test-uuid-456');
+        mockUuid.mockReturnValue('test-uuid-456');
         store.dispatch(addReminder({ taskId: 'task-1', type: 'repeat' }));
-        vi.mocked(uuidv4).mockReturnValue('test-uuid-789');
+        mockUuid.mockReturnValue('test-uuid-789');
         store.dispatch(addReminder({ taskId: 'task-2', type: 'time' }));
 
         // Delete reminders for task-1
@@ -174,17 +183,20 @@ describe('reminderSlice', () => {
       it('should toggle reminder active state', () => {
         store.dispatch(addReminder({ taskId: 'task-1', type: 'time' }));
 
-        // Initially active
+        // Get the actual reminder ID
         let state = store.getState() as { reminder: any };
+        const reminderId = state.reminder.reminders[0].id;
+
+        // Initially active
         expect(state.reminder.reminders[0].isActive).toBe(true);
 
         // Toggle off
-        store.dispatch(toggleReminder('test-uuid-123'));
+        store.dispatch(toggleReminder(reminderId));
         state = store.getState() as { reminder: any };
         expect(state.reminder.reminders[0].isActive).toBe(false);
 
         // Toggle on
-        store.dispatch(toggleReminder('test-uuid-123'));
+        store.dispatch(toggleReminder(reminderId));
         state = store.getState() as { reminder: any };
         expect(state.reminder.reminders[0].isActive).toBe(true);
       });
@@ -192,6 +204,7 @@ describe('reminderSlice', () => {
 
     describe('setReminders', () => {
       it('should set reminders array', () => {
+        const now = new Date().toISOString();
         const reminders: Reminder[] = [
           {
             id: 'reminder-1',
@@ -199,16 +212,16 @@ describe('reminderSlice', () => {
             type: 'time',
             timeOffset: -10,
             isActive: true,
-            createdAt: new Date(),
-            updatedAt: new Date(),
+            createdAt: now as any,
+            updatedAt: now as any,
           },
           {
             id: 'reminder-2',
             taskId: 'task-2',
             type: 'repeat',
             isActive: false,
-            createdAt: new Date(),
-            updatedAt: new Date(),
+            createdAt: now as any,
+            updatedAt: now as any,
           },
         ];
 
@@ -294,17 +307,30 @@ describe('reminderSlice', () => {
       });
 
       it('should remove inactive time reminders', () => {
+        // Add a time reminder
         store.dispatch(
           addReminder({
             taskId: 'task-1',
             type: 'time',
           })
         );
-        store.dispatch(toggleReminder('test-uuid-123')); // Make inactive
 
+        // Get current state to find the actual ID
+        let state = store.getState() as { reminder: any };
+        const reminderId = state.reminder.reminders[0].id;
+
+        // Toggle to make it inactive
+        store.dispatch(toggleReminder(reminderId));
+
+        // Verify it's now inactive
+        state = store.getState() as { reminder: any };
+        expect(state.reminder.reminders[0].isActive).toBe(false);
+
+        // Clean up expired reminders
         store.dispatch(cleanupExpiredReminders());
 
-        const state = store.getState() as { reminder: any };
+        // Should be removed
+        state = store.getState() as { reminder: any };
         expect(state.reminder.reminders).toHaveLength(0);
       });
     });
@@ -332,6 +358,10 @@ describe('reminderSlice', () => {
   describe('selectors', () => {
     beforeEach(() => {
       // Setup test data
+      // Reset UUID mock to start with 'test-uuid-123'
+      mockUuid.mockReset();
+      mockUuid.mockReturnValue('test-uuid-123');
+
       store.dispatch(
         addReminder({
           taskId: 'task-1',
@@ -340,16 +370,20 @@ describe('reminderSlice', () => {
         })
       );
 
-      vi.mocked(uuidv4).mockReturnValue('test-uuid-456');
+      mockUuid.mockReturnValue('test-uuid-456');
       store.dispatch(
         addReminder({
           taskId: 'task-2',
           type: 'repeat',
         })
       );
-      store.dispatch(toggleReminder('test-uuid-456')); // Make inactive
 
-      vi.mocked(uuidv4).mockReturnValue('test-uuid-789');
+      // Get actual IDs to toggle
+      const state = store.getState() as { reminder: any };
+      const secondReminderId = state.reminder.reminders[1].id;
+      store.dispatch(toggleReminder(secondReminderId)); // Make inactive
+
+      mockUuid.mockReturnValue('test-uuid-789');
       store.dispatch(
         addReminder({
           taskId: 'task-1',

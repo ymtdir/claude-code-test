@@ -33,7 +33,7 @@ export class NotificationService {
    * @returns 権限の状態
    */
   checkPermission(): NotificationPermission {
-    if (!('Notification' in window)) {
+    if (!('Notification' in window) || !window.Notification) {
       console.warn('このブラウザは通知機能をサポートしていません');
       return 'denied';
     }
@@ -45,7 +45,7 @@ export class NotificationService {
    * @returns 権限が許可されたかどうか
    */
   async requestPermission(): Promise<boolean> {
-    if (!('Notification' in window)) {
+    if (!('Notification' in window) || !window.Notification) {
       console.warn('このブラウザは通知機能をサポートしていません');
       return false;
     }
@@ -404,7 +404,7 @@ export class NotificationService {
    * 通知がサポートされているかチェック
    */
   isSupported(): boolean {
-    return 'Notification' in window;
+    return 'Notification' in window && window.Notification !== undefined;
   }
 
   /**

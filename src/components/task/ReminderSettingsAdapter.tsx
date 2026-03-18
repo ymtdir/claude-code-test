@@ -67,15 +67,18 @@ export const ReminderSettingsAdapter: React.FC<
     (updatedReminders: NewReminderType[]) => {
       // フォームの形式に変換
       const formReminders: Partial<Reminder>[] = updatedReminders.map(
-        (reminder: NewReminderType) => ({
-          id: reminder.id,
-          taskId: reminder.taskId,
-          type: (reminder.type === 'repeat' ? 'time' : reminder.type) as
-            | 'time'
-            | 'location',
-          timeOffset: reminder.timeOffset,
-          isActive: reminder.isActive,
-        })
+        (reminder: NewReminderType) => {
+          const baseReminder: Partial<Reminder> = {
+            id: reminder.id,
+            taskId: reminder.taskId,
+            type: (reminder.type === 'repeat' ? 'time' : reminder.type) as
+              | 'time'
+              | 'location',
+            timeOffset: reminder.timeOffset,
+            isActive: reminder.isActive,
+          };
+          return baseReminder;
+        }
       );
       onChange(formReminders);
     },
