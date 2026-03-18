@@ -1,36 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card } from '../../components/ui/Card';
 import { Typography } from '../../components/ui/Typography';
 import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
-import { Switch } from '../../components/ui/Switch';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { ReminderSettings } from '../../components/ReminderSettings/ReminderSettings';
+import { ReminderList } from '../../components/ReminderList/ReminderList';
+import { selectTaskById } from '../../store/slices/tasksSlice';
+import type { RootState } from '../../store/store';
+import NotificationService from '../../services/NotificationService';
+import { setNotificationPermission } from '../../store/slices/reminderSlice';
 
 /**
  * リマインダー設定モーダル画面
  */
 export const ReminderScreen: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { taskId } = useParams<{ taskId: string }>();
+  const [activeTab, setActiveTab] = useState<'settings' | 'list'>('settings');
 
-  const today = new Date().toISOString().split('T')[0];
-  const [enabled, setEnabled] = useState(true);
-  const [date, setDate] = useState(today);
-  const [time, setTime] = useState('09:00');
-  const [repeatType, setRepeatType] = useState('none');
-  const [notification, setNotification] = useState(true);
+  // Reduxからタスク情報を取得
+  const task = useSelector((state: RootState) =>
+    taskId ? selectTaskById(state, taskId) : undefined
+  );
 
-  const handleSave = () => {
-    console.log('リマインダーを設定:', {
-      taskId,
-      enabled,
-      date,
-      time,
-      repeatType,
-      notification,
-    });
-    navigate(-1);
-  };
+  // 初期化時に通知権限をチェック
+  useEffect(() => {
+    const permission = NotificationService.checkPermission();
+    dispatch(setNotificationPermission(permission));
+  }, [dispatch]);
 
   const handleCancel = () => {
     navigate(-1);
@@ -54,142 +53,98 @@ export const ReminderScreen: React.FC = () => {
     >
       <Card
         style={{
-          maxWidth: '450px',
+          maxWidth: '600px',
           width: '100%',
+          maxHeight: '80vh',
+          overflow: 'auto',
         }}
       >
         <Typography variant="h2" style={{ marginBottom: '24px' }}>
-          リマインダー設定
+          リマインダー管理
         </Typography>
 
-        <Typography
-          variant="body2"
-          color="secondary"
-          style={{ marginBottom: '20px' }}
+        {/* タブ切り替え */}
+        <div
+          style={{
+            display: 'flex',
+            gap: '16px',
+            marginBottom: '24px',
+            borderBottom: '2px solid #e0e0e0',
+          }}
         >
-          タスクID: {taskId}
-        </Typography>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <div
+          <button
+            onClick={() => setActiveTab('settings')}
             style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: '12px',
-              background: '#f5f5f5',
-              borderRadius: '8px',
+              padding: '8px 16px',
+              background: 'none',
+              border: 'none',
+              borderBottom:
+                activeTab === 'settings' ? '2px solid #667eea' : 'none',
+              color: activeTab === 'settings' ? '#667eea' : '#666',
+              fontWeight: activeTab === 'settings' ? 600 : 400,
+              cursor: 'pointer',
+              marginBottom: '-2px',
             }}
           >
-            <Typography variant="body1">リマインダーを有効化</Typography>
-            <Switch
-              checked={enabled}
-              onChange={(checked) => setEnabled(checked)}
-            />
-          </div>
-
-          {enabled && (
-            <>
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 1fr',
-                  gap: '16px',
-                }}
-              >
-                <Input
-                  label="通知日"
-                  type="date"
-                  value={date}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setDate(e.target.value)
-                  }
-                  fullWidth
-                />
-                <Input
-                  label="通知時刻"
-                  type="time"
-                  value={time}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setTime(e.target.value)
-                  }
-                  fullWidth
-                />
-              </div>
-
-              <div>
-                <label
-                  style={{
-                    display: 'block',
-                    marginBottom: '8px',
-                    fontSize: '14px',
-                  }}
-                >
-                  繰り返し設定
-                </label>
-                <select
-                  value={repeatType}
-                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                    setRepeatType(e.target.value)
-                  }
-                  style={{
-                    width: '100%',
-                    padding: '8px 12px',
-                    border: '1px solid #ddd',
-                    borderRadius: '4px',
-                    fontSize: '14px',
-                  }}
-                >
-                  <option value="none">繰り返しなし</option>
-                  <option value="daily">毎日</option>
-                  <option value="weekly">毎週</option>
-                  <option value="monthly">毎月</option>
-                  <option value="weekdays">平日のみ</option>
-                  <option value="weekends">週末のみ</option>
-                </select>
-              </div>
-
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}
-              >
-                <Typography>プッシュ通知を送信</Typography>
-                <Switch
-                  checked={notification}
-                  onChange={(checked) => setNotification(checked)}
-                />
-              </div>
-
-              <Card style={{ background: '#e3f2fd' }}>
-                <Typography variant="body2">
-                  💡 ヒント:
-                  リマインダーを設定すると、指定した時刻に通知が送信されます。
-                  繰り返し設定を使用して、定期的なタスクのリマインダーを自動化できます。
-                </Typography>
-              </Card>
-            </>
-          )}
-
-          <div
+            新規設定
+          </button>
+          <button
+            onClick={() => setActiveTab('list')}
             style={{
-              display: 'flex',
-              gap: '12px',
-              justifyContent: 'flex-end',
-              marginTop: '16px',
-              borderTop: '1px solid #e0e0e0',
-              paddingTop: '16px',
+              padding: '8px 16px',
+              background: 'none',
+              border: 'none',
+              borderBottom: activeTab === 'list' ? '2px solid #667eea' : 'none',
+              color: activeTab === 'list' ? '#667eea' : '#666',
+              fontWeight: activeTab === 'list' ? 600 : 400,
+              cursor: 'pointer',
+              marginBottom: '-2px',
             }}
           >
-            <Button variant="outlined" onClick={handleCancel}>
-              キャンセル
-            </Button>
-            <Button variant="primary" onClick={handleSave} disabled={!enabled}>
-              設定を保存
-            </Button>
-          </div>
+            リマインダー一覧
+          </button>
+        </div>
+
+        {/* タブコンテンツ */}
+        {activeTab === 'settings' && task && (
+          <ReminderSettings
+            taskId={task.id}
+            taskTitle={task.title}
+            taskDate={task.date}
+            taskTime={task.time}
+          />
+        )}
+
+        {activeTab === 'list' && (
+          <ReminderList
+            filterTaskId={taskId}
+            showInactive={true}
+            onReminderClick={(reminder) => {
+              console.log('Reminder clicked:', reminder);
+              setActiveTab('settings');
+            }}
+          />
+        )}
+
+        {!task && taskId && (
+          <Typography variant="body2" color="secondary">
+            タスクが見つかりません: {taskId}
+          </Typography>
+        )}
+
+        <div
+          style={{
+            display: 'flex',
+            gap: '12px',
+            justifyContent: 'flex-end',
+            marginTop: '24px',
+            borderTop: '1px solid #e0e0e0',
+            paddingTop: '16px',
+          }}
+        >
+          <Button variant="outlined" onClick={handleCancel}>
+            閉じる
+          </Button>
         </div>
       </Card>
     </div>
