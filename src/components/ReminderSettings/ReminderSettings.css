@@ -1,0 +1,387 @@
+/**
+ * ReminderSettings Component Styles
+ * リマインダー設定UIのスタイル
+ */
+
+.reminder-settings {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  margin: 20px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.reminder-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.reminder-title .icon {
+  font-size: 20px;
+}
+
+/* 通知権限バナー */
+.permission-banner {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.permission-banner p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.permission-button {
+  background-color: white;
+  color: #667eea;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.permission-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+/* プリセットセクション */
+.preset-section {
+  margin-bottom: 24px;
+}
+
+.preset-section h4 {
+  color: #555;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.preset-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.preset-button {
+  position: relative;
+  padding: 10px 16px;
+  background-color: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.preset-button:hover:not(:disabled) {
+  border-color: #667eea;
+  background-color: #f7f9ff;
+}
+
+.preset-button.active {
+  background-color: #667eea;
+  color: white;
+  border-color: #667eea;
+  cursor: not-allowed;
+}
+
+.preset-button:disabled {
+  opacity: 0.9;
+}
+
+.preset-button .check-mark {
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+/* 繰り返し設定 */
+.repeat-section {
+  margin-bottom: 24px;
+}
+
+.repeat-toggle {
+  width: 100%;
+  padding: 12px 16px;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.repeat-toggle:hover {
+  background-color: #f8f9fa;
+  border-color: #667eea;
+}
+
+.repeat-toggle .icon {
+  margin-right: 8px;
+}
+
+.repeat-toggle .arrow {
+  transition: transform 0.2s ease;
+  font-size: 12px;
+  color: #999;
+}
+
+.repeat-toggle .arrow.open {
+  transform: rotate(180deg);
+}
+
+.repeat-options {
+  margin-top: 12px;
+  padding: 16px;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.repeat-options label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #555;
+  cursor: pointer;
+  padding: 8px 0;
+}
+
+.repeat-options label:hover {
+  color: #667eea;
+}
+
+.repeat-options input[type='radio'] {
+  width: 16px;
+  height: 16px;
+  accent-color: #667eea;
+  cursor: pointer;
+}
+
+/* アクティブなリマインダー */
+.active-reminders {
+  margin-top: 24px;
+  padding: 16px;
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.active-reminders h4 {
+  color: #333;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.reminder-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reminder-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.reminder-item:hover {
+  background-color: #f0f2f5;
+}
+
+.reminder-item input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  accent-color: #667eea;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.reminder-label {
+  flex: 1;
+  font-size: 14px;
+  color: #555;
+  font-weight: 500;
+}
+
+.delete-button {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background-color: #ff4757;
+  color: white;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  line-height: 1;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.delete-button:hover {
+  background-color: #ff3838;
+  transform: scale(1.1);
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .reminder-settings {
+    padding: 16px;
+    margin: 16px 0;
+  }
+
+  .preset-buttons {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .permission-banner {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .permission-button {
+    width: 100%;
+  }
+}
+
+/* ダークモード対応 */
+@media (prefers-color-scheme: dark) {
+  .reminder-settings {
+    background-color: #1a1a1a;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .reminder-title {
+    color: #f0f0f0;
+  }
+
+  .preset-section h4,
+  .active-reminders h4 {
+    color: #b0b0b0;
+  }
+
+  .preset-button {
+    background-color: #2a2a2a;
+    border-color: #3a3a3a;
+    color: #f0f0f0;
+  }
+
+  .preset-button:hover:not(:disabled) {
+    background-color: #3a3a3a;
+    border-color: #667eea;
+  }
+
+  .preset-button.active {
+    background-color: #667eea;
+    color: white;
+  }
+
+  .repeat-toggle,
+  .repeat-options,
+  .active-reminders {
+    background-color: #2a2a2a;
+    border-color: #3a3a3a;
+    color: #f0f0f0;
+  }
+
+  .repeat-toggle:hover {
+    background-color: #3a3a3a;
+  }
+
+  .reminder-item {
+    background-color: #2a2a2a;
+  }
+
+  .reminder-item:hover {
+    background-color: #3a3a3a;
+  }
+
+  .reminder-label,
+  .repeat-options label {
+    color: #b0b0b0;
+  }
+
+  .repeat-options label:hover {
+    color: #667eea;
+  }
+}
+
+/* アニメーション */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.repeat-options {
+  animation: slideDown 0.2s ease-out;
+}
+
+/* フォーカス状態 */
+.preset-button:focus-visible,
+.permission-button:focus-visible,
+.repeat-toggle:focus-visible,
+.delete-button:focus-visible {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* トランジション最適化 */
+.reminder-settings * {
+  transition-property:
+    background-color, border-color, color, transform, opacity;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+}
