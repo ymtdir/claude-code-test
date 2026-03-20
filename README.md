@@ -1,6 +1,8 @@
 # Claude Code Test
 
 [![CI](https://github.com/ymtdir/claude-code-test/actions/workflows/ci.yml/badge.svg)](https://github.com/ymtdir/claude-code-test/actions/workflows/ci.yml)
+[![Test](https://github.com/ymtdir/claude-code-test/actions/workflows/test.yml/badge.svg)](https://github.com/ymtdir/claude-code-test/actions/workflows/test.yml)
+[![Security Scan](https://github.com/ymtdir/claude-code-test/actions/workflows/security.yml/badge.svg)](https://github.com/ymtdir/claude-code-test/actions/workflows/security.yml)
 
 Claude Code開発テスト用のリポジトリです。
 
@@ -28,11 +30,27 @@ npm run dev
 
 ## スクリプト
 
+### 開発
+
 - `npm run dev` - 開発サーバーを起動
 - `npm run build` - プロダクションビルド
+
+### コード品質
+
 - `npm run lint` - ESLintでコードチェック
 - `npm run format` - Prettierでコードフォーマット
 - `npm run format:check` - フォーマットのチェック
+- `npm run typecheck` - TypeScript型チェック
+
+### テスト
+
+- `npm test` - テストをwatchモードで実行
+- `npm run test:run` - テストを1回実行
+- `npm run test:run -- --coverage` - カバレッジ付きでテスト実行
+
+### CI/CD
+
+- `npm run ci:check` - CI環境で実行される全チェック
 
 ## プロジェクト構造
 
@@ -45,6 +63,35 @@ npm run dev
 ├── src/              # ソースコード
 └── tests/            # テストファイル
 ```
+
+## CI/CD
+
+このプロジェクトでは、GitHub Actionsを使用した自動化されたCI/CDパイプラインを実装しています。
+
+### ワークフロー
+
+1. **CI** (`.github/workflows/ci.yml`)
+   - トリガー: `main`, `develop` ブランチへのpush/PR
+   - 実行内容: フォーマットチェック、リント、型チェック、テスト、ビルド
+
+2. **Test** (`.github/workflows/test.yml`)
+   - トリガー: `main`, `develop` ブランチへのpush/PR
+   - 実行内容: 複数Node.jsバージョン（20.x, 25.x）でのテストとカバレッジ測定
+
+3. **Security Scan** (`.github/workflows/security.yml`)
+   - トリガー: 週次スケジュール（毎週月曜）、PR
+   - 実行内容: npm auditによる脆弱性スキャン
+
+4. **Dependabot** (`.github/dependabot.yml`)
+   - npm依存関係とGitHub Actionsの週次自動更新
+
+### ブランチ保護
+
+`main`ブランチはブランチ保護が設定されており、以下が必須です：
+
+- すべてのCIチェックが成功すること
+- コードレビューの承認
+- 最新のmainブランチとの同期
 
 ## 開発プロセス
 
