@@ -13,7 +13,9 @@
       "Bash(git:*)",
       "Bash(gh api:*)",
       "WebFetch(*)",
-      "WebSearch(*)"
+      "WebSearch(*)",
+      "Edit(*)",
+      "Write(*)"
     ],
     "deny": [
       "Read(./.env)",
