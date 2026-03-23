@@ -71,7 +71,7 @@ mcp__github__issue_write({
 ```markdown
 ### [課題タイトル]
 - **Issue番号**: #[番号]
-- **種類**: [bug/enhancement/tech-debt]
+- **種類**: [bug/enhancement/refactor]
 - **作成日時**: [日時]
 - **URL**: [Issue URL]
 ```
