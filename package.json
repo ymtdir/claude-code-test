@@ -21,7 +21,7 @@
     "docs:clean": "rm -rf docs/api"
   },
   "dependencies": {
-    "@react-native-community/datetimepicker": "^8.6.0",
+    "@react-native-community/datetimepicker": "^9.1.0",
     "@reduxjs/toolkit": "^2.11.2",
     "date-fns": "^4.1.0",
     "dexie": "^4.3.0",
