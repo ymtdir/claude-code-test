@@ -1,6 +1,4 @@
 {
-  "language": "ja",
-  "enableAllProjectMcpServers": true,
   "permissions": {
     "allow": [
       "Bash(find:*)",
@@ -13,7 +11,9 @@
       "Bash(git:*)",
       "Bash(gh api:*)",
       "WebFetch(*)",
-      "WebSearch(*)"
+      "WebSearch(*)",
+      "Edit(*)",
+      "Write(*)"
     ],
     "deny": [
       "Read(./.env)",
@@ -28,31 +28,7 @@
       "Bash(git reset --hard:*)"
     ]
   },
-  "sandbox": {
-    "enabled": true,
-    "autoAllowBashIfSandboxed": true,
-    "excludedCommands": ["git", "docker"],
-    "allowUnsandboxedCommands": false,
-    "network": {
-      "allowedDomains": ["github.com", "*.npmjs.org"],
-      "allowLocalBinding": true
-    }
-  },
-  "skills": {
-    "allowed": [
-      "setup-project",
-      "prd-writing",
-      "functional-design",
-      "architecture-design",
-      "repository-structure",
-      "development-guidelines",
-      "glossary-creation",
-      "steering",
-      "issue-tracking",
-      "issue-resolution",
-      "pr-creation"
-    ]
-  },
+  "enableAllProjectMcpServers": true,
   "hooks": {
     "Notification": [
       {
@@ -89,5 +65,50 @@
   "statusLine": {
     "type": "command",
     "command": "./statusline.sh"
+  },
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "claude-plugins-official": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/anthropics/claude-plugins-official.git"
+      }
+    }
+  },
+  "language": "ja",
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true,
+    "allowUnsandboxedCommands": false,
+    "network": {
+      "allowedDomains": [
+        "github.com",
+        "*.npmjs.org"
+      ],
+      "allowLocalBinding": true
+    },
+    "excludedCommands": [
+      "git",
+      "docker"
+    ]
+  },
+  "skills": {
+    "allowed": [
+      "setup-project",
+      "prd-writing",
+      "functional-design",
+      "architecture-design",
+      "repository-structure",
+      "development-guidelines",
+      "glossary-creation",
+      "steering",
+      "issue-tracking",
+      "issue-resolution",
+      "pr-creation"
+    ]
   }
 }

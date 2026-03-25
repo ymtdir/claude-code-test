@@ -30,3 +30,6 @@ dist-ssr
 *.sln
 *.sw?
 coverage/
+
+# TypeDoc generated documentation
+docs/api/

@@ -93,6 +93,25 @@ npm run dev
 - コードレビューの承認
 - 最新のmainブランチとの同期
 
+## ドキュメント
+
+### 開発者向けドキュメント
+
+- [CONTRIBUTING.md](./docs/CONTRIBUTING.md) - コントリビューションガイド
+- [TROUBLESHOOTING.md](./docs/TROUBLESHOOTING.md) - トラブルシューティングガイド
+- [SECURITY.md](./docs/SECURITY.md) - セキュリティガイドライン
+- [API Documentation](./docs/api/README.md) - TypeDoc自動生成APIドキュメント
+
+### プロジェクトドキュメント
+
+- [CLAUDE.md](./CLAUDE.md) - スペック駆動開発のガイド
+- [product-requirements.md](./docs/product-requirements.md) - プロダクト要求定義書
+- [functional-design.md](./docs/functional-design.md) - 機能設計書
+- [architecture.md](./docs/architecture.md) - アーキテクチャ設計書
+- [repository-structure.md](./docs/repository-structure.md) - リポジトリ構造定義書
+- [development-guidelines.md](./docs/development-guidelines.md) - 開発ガイドライン
+- [glossary.md](./docs/glossary.md) - 用語集
+
 ## 開発プロセス
 
 詳細は[CLAUDE.md](./CLAUDE.md)を参照してください。

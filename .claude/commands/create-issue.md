@@ -23,7 +23,8 @@ claude
 ### ステップ2: issue-trackingスキルの実行
 
 1. **issue-trackingスキル**をロード
-2. スキルに課題内容とオプションを渡してIssue作成:
+2. ラベル判定は **shared/references/label-definitions.md** の定義に従う
+3. スキルに課題内容とオプションを渡してIssue作成:
    - 現在のGitコンテキストを収集
    - 課題の種類を判定（bug/enhancement/refactor）
    - 適切なテンプレートを選択
@@ -38,7 +39,7 @@ claude
 
 Issue #123: ログアウト時にセッションが残る
 URL: https://github.com/owner/repo/issues/123
-ラベル: bug, deferred
+ラベル: bug
 
 現在の作業を続けてください。
 ```
@@ -56,6 +57,5 @@ URL: https://github.com/owner/repo/issues/123
 種類: [bug/enhancement/refactor]
 URL: [GitHub Issue URL]
 
-このIssueは後日対応予定としてマークされています。
 現在の作業を続けてください。」
 ```

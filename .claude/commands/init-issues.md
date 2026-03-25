@@ -19,8 +19,6 @@ claude
   - docs/product-requirements.md
   - docs/functional-design.md
   - docs/architecture.md
-- ラベル定義を確認すること：
-  - **必須**: `.claude/skills/shared/references/label-definitions.md`を参照
 
 ## 手順
 
@@ -37,7 +35,7 @@ claude
 
 ### ステップ2: Issue作成計画
 
-プロジェクトタイプに応じた標準Issueセット：
+プロジェクトタイプに応じた標準Issueセットを設計：
 
 **共通Issue**:
 - 開発環境セットアップ
@@ -49,18 +47,22 @@ claude
 - Web: レスポンシブ対応、SEO
 - CLI: コマンド実装、設定管理
 
-### ステップ3: GitHub APIでIssue作成
+各Issueについて以下を決定：
+- タイトルと本文
+- 種類（bug/enhancement/refactor/documentation）
+- 依存関係（前のステップへの依存を明記）
 
-各Issueの作成手順：
+### ステップ3: issue-trackingスキルで各Issueを作成
 
-1. **ラベル選択**: `.claude/skills/shared/references/label-definitions.md`で定義された標準ラベルから適切なものを選択
-   - ⚠️ 定義ファイルに記載されていないラベルは使用禁止
+**issue-trackingスキル**をロードし、計画した各Issueを順番に作成します。
 
-2. **テンプレート適用**: enhancementテンプレートを基本使用
+各Issueの作成フロー（issue-trackingスキルに委譲）：
+1. 種類に応じたラベル判定（label-definitions.md準拠）
+2. テンプレート適用
+3. 依存関係を本文に記述（例: `前提: #15`）
+4. GitHub APIでIssue作成
 
-3. **依存関係記述**: 前のステップへの依存を明記（例: #15が前提）
-
-4. **API実行**: `mcp__github__issue_write`でIssue作成
+**重要**: ラベル判定・テンプレート適用のロジックはissue-trackingスキルに一元化されているため、このコマンドでは独自にラベルを決定しない。
 
 ### ステップ4: 結果レポート
 
@@ -82,6 +84,5 @@ claude
 ## 完了条件
 
 - 論理的な順序でIssueが作成される
-- 標準的なGitHubラベルが使用される
 - 依存関係が明確に記載される
 - 開発着手可能な状態になる
