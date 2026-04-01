@@ -1,4 +1,0 @@
-#!/bin/sh
-
-echo "🔍 実行中: CI前チェック (format, lint, typecheck, build, test)"
-npm run ci:check
