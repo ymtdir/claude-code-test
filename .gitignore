@@ -33,3 +33,6 @@ coverage/
 
 # TypeDoc generated documentation
 docs/api/
+
+# Legacy directories (sandbox cleanup)
+UnifiedCal/
