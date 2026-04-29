@@ -264,10 +264,7 @@ sequenceDiagram
 
 ## 画面設計
 
-具体的なビジュアル仕様（カラーパレット・タイポグラフィ・各画面のレイアウト詳細）は別ファイルに分割している:
-
-- **デザイントークン**: [docs/detailed-design/design-tokens.md](./detailed-design/design-tokens.md)
-- **ワイヤーフレーム（HTML）**: [docs/mockups/家計簿ワイヤーフレーム.html](./mockups/家計簿ワイヤーフレーム.html)（ブラウザで開いて視覚確認）
+具体的なデザイン仕様（意図・原則・コンポーネント・トークン要点）は [DESIGN.md](../DESIGN.md) に集約している。視覚原本は [docs/mockups/家計簿ワイヤーフレーム.html](./mockups/家計簿ワイヤーフレーム.html)（ブラウザで開く）。
 
 本節では構造（タブ配置・遷移先・主要操作）のみを定義する。
 
